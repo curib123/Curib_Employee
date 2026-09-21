@@ -1,0 +1,16 @@
+# .htaccess | 2026-09-21
+# Apache rewrite and access rules for the Curib Employee application.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent direct access to application source and Composer packages.
+    RewriteRule ^(?:application|vendor)(?:/|$) - [F,L,NC]
+
+    # Route non-file and non-directory requests through CodeIgniter.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)$ index.php/$1 [L,QSA]
+</IfModule>
