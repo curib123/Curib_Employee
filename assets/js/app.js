@@ -1,6 +1,6 @@
 /**
  * assets/js/app.js | 2026-09-21
- * Shared Bootstrap modal and validation behavior.
+ * Shared Bootstrap modal, validation, and first-login prompt behavior.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -34,5 +34,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         alertModal.show();
+        return;
+    }
+
+    const passwordModalElement = document.getElementById('firstLoginPasswordModal');
+
+    if (
+        passwordModalElement &&
+        passwordModalElement.dataset.firstLoginPasswordModal === '1'
+    ) {
+        bootstrap.Modal.getOrCreateInstance(passwordModalElement).show();
     }
 });
