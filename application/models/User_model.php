@@ -44,6 +44,13 @@ class User_model extends CI_Model
         return $this->db->insert($this->table, $data);
     }
 
+    public function update_password_hash($id, $password_hash)
+    {
+        return $this->db
+            ->where('Id', (int) $id)
+            ->update($this->table, array('password' => $password_hash));
+    }
+
     public function update_password_and_clear_prompt($id, $password_hash)
     {
         return $this->db
