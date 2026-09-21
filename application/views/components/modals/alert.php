@@ -44,7 +44,7 @@ elseif ($has_flash)
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="modal-header border-0 text-bg-<?= html_escape($alert_type); ?> px-4 py-3">
                 <h2 class="modal-title fs-5" id="alertModalLabel"><?= html_escape($alert_title); ?></h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
                 <?php if ($has_validation_errors): ?>
