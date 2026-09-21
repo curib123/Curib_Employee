@@ -13,12 +13,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <title>Save Your Password | Curib Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <main class="min-vh-100 d-flex align-items-center bg-body-tertiary py-5">
-        <section class="container text-center bg-white border rounded-4 shadow-sm p-5">
-            <div class="badge text-bg-primary fs-4 p-2 mb-3">C</div>
-            <h1 class="h4">Your account is ready.</h1>
-            <p class="text-secondary mb-0">
+<body class="bg-body-tertiary">
+    <main class="min-vh-100 d-flex align-items-center py-5">
+        <section class="container text-center">
+            <div class="badge rounded-3 text-bg-primary fs-4 p-2 mb-3">C</div>
+            <h1 class="h3 fw-bold">Your account is ready.</h1>
+            <p class="text-secondary col-lg-6 mx-auto mb-0">
                 Copy the generated password, then sign in from the Login page with your email and that password.
             </p>
         </section>
