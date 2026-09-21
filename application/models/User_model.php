@@ -12,9 +12,20 @@ class User_model extends CI_Model
     public function find_by_email($email)
     {
         return $this->db
-            ->select('Id, firstname, lastname, birthday, address, contactno, email, password')
+            ->select('Id, firstname, lastname, birthday, address, contactno, email, password, must_change_password')
             ->from($this->table)
             ->where('email', strtolower(trim((string) $email)))
+            ->limit(1)
+            ->get()
+            ->row_array();
+    }
+
+    public function find_by_id($id)
+    {
+        return $this->db
+            ->select('Id, firstname, lastname, birthday, address, contactno, email, password, must_change_password')
+            ->from($this->table)
+            ->where('Id', (int) $id)
             ->limit(1)
             ->get()
             ->row_array();
@@ -31,5 +42,24 @@ class User_model extends CI_Model
     public function insert($data)
     {
         return $this->db->insert($this->table, $data);
+    }
+
+    public function update_password_and_clear_prompt($id, $password_hash)
+    {
+        return $this->db
+            ->where('Id', (int) $id)
+            ->update($this->table, array(
+                'password' => $password_hash,
+                'must_change_password' => 0
+            ));
+    }
+
+    public function clear_password_prompt($id)
+    {
+        return $this->db
+            ->where('Id', (int) $id)
+            ->update($this->table, array(
+                'must_change_password' => 0
+            ));
     }
 }
