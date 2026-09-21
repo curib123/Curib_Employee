@@ -1,5 +1,5 @@
 -- database/curib.sql | 2026-09-21
--- Fresh database schema for Curib Employee with first-login password flow.
+-- Fresh database schema for Curib Employee with authentication and database sessions.
 
 CREATE DATABASE IF NOT EXISTS `Curib`
     CHARACTER SET utf8mb4
@@ -33,6 +33,17 @@ CREATE TABLE IF NOT EXISTS `users` (
     PRIMARY KEY (`Id`),
     UNIQUE KEY `uq_users_email` (`email`),
     INDEX `idx_users_name` (`lastname`, `firstname`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `ci_sessions` (
+    `id` VARCHAR(128) NOT NULL,
+    `ip_address` VARCHAR(45) NOT NULL,
+    `timestamp` INT(10) UNSIGNED NOT NULL DEFAULT 0,
+    `data` BLOB NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
