@@ -1,18 +1,27 @@
 <?php
 /**
  * application/controllers/Auth.php | 2026-09-21
- * Registration, generated-password login, first-login password prompt, logout, and sessions.
+ * Registration, login, generated-password handoff, first-login password flow, and logout.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller
 {
+    private $max_login_attempts = 5;
+    private $login_window_seconds = 900;
+    private $login_lock_seconds = 300;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->load->model('User_model');
+        $this->load->model('Auth_attempt_model');
         $this->load->library('form_validation');
+
+        $this->output
+            ->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0')
+            ->set_header('Pragma: no-cache');
     }
 
     public function login()
@@ -23,16 +32,9 @@ class Auth extends CI_Controller
             return;
         }
 
-        $prefill_email = $this->session->flashdata('old_email');
-
-        if (!$prefill_email)
-        {
-            $prefill_email = strtolower(trim((string) $this->input->get('email', TRUE)));
-        }
-
         $data = array(
             'flash' => $this->session->flashdata('flash'),
-            'old_email' => $prefill_email ?: ''
+            'old_email' => $this->session->flashdata('old_email') ?: ''
         );
 
         $this->load->view('auth/login.php', $data);
@@ -48,18 +50,16 @@ class Auth extends CI_Controller
             return;
         }
 
-        $lock_until = (int) $this->session->userdata('login_lock_until');
-
-        if ($lock_until > time())
-        {
-            $seconds = $lock_until - time();
-            $this->set_flash('warning', 'Too many failed login attempts. Try again in ' . $seconds . ' seconds.');
-            redirect('login');
-            return;
-        }
-
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[190]');
-        $this->form_validation->set_rules('password', 'Password', 'required|max_length[255]');
+        $this->form_validation->set_rules(
+            'email',
+            'Email',
+            'trim|required|valid_email|max_length[190]'
+        );
+        $this->form_validation->set_rules(
+            'password',
+            'Password',
+            'required|max_length[72]'
+        );
 
         $email = strtolower(trim((string) $this->input->post('email', TRUE)));
         $password = (string) $this->input->post('password', FALSE);
@@ -72,18 +72,58 @@ class Auth extends CI_Controller
             return;
         }
 
+        $identifier_hash = hash('sha256', $email);
+        $ip_address = (string) $this->input->ip_address();
+        $now = time();
+
+        $this->Auth_attempt_model->cleanup_stale($now - 86400);
+        $attempt_state = $this->Auth_attempt_model->get_state($identifier_hash, $ip_address);
+
+        if ($attempt_state && (int) $attempt_state['locked_until'] > $now)
+        {
+            $remaining_seconds = (int) $attempt_state['locked_until'] - $now;
+            $remaining_minutes = max(1, (int) ceil($remaining_seconds / 60));
+
+            $this->session->set_flashdata('old_email', $email);
+            $this->set_flash(
+                'warning',
+                'Too many failed sign-in attempts. Try again in about ' . $remaining_minutes . ' minute' .
+                ($remaining_minutes === 1 ? '.' : 's.')
+            );
+            redirect('login');
+            return;
+        }
+
         $user = $this->User_model->find_by_email($email);
 
         if (!$user || !password_verify($password, $user['password']))
         {
-            $this->record_failed_login();
+            $this->Auth_attempt_model->record_failure(
+                $identifier_hash,
+                $ip_address,
+                $this->max_login_attempts,
+                $this->login_window_seconds,
+                $this->login_lock_seconds
+            );
+
             $this->session->set_flashdata('old_email', $email);
             $this->set_flash('danger', 'The email or password is incorrect.');
             redirect('login');
             return;
         }
 
-        $this->clear_login_attempts();
+        $this->Auth_attempt_model->clear($identifier_hash, $ip_address);
+
+        if (password_needs_rehash($user['password'], PASSWORD_DEFAULT))
+        {
+            $rehash = password_hash($password, PASSWORD_DEFAULT);
+
+            if ($rehash !== FALSE)
+            {
+                $this->User_model->update_password_hash((int) $user['Id'], $rehash);
+            }
+        }
+
         $this->start_authenticated_session($user);
 
         if ((int) $user['must_change_password'] !== 1)
@@ -133,32 +173,40 @@ class Auth extends CI_Controller
             return;
         }
 
-        $plain_password = $this->generate_password(14);
-        $payload['password'] = password_hash($plain_password, PASSWORD_DEFAULT);
+        $plain_password = $this->generate_password(16);
+        $password_hash = password_hash($plain_password, PASSWORD_DEFAULT);
+
+        if ($password_hash === FALSE)
+        {
+            $this->session->set_flashdata('old_input', $payload);
+            $this->set_flash('danger', 'A secure password could not be generated. Please try again.');
+            redirect('register');
+            return;
+        }
+
+        $payload['password'] = $password_hash;
         $payload['must_change_password'] = 1;
 
         if (!$this->User_model->insert($payload))
         {
             unset($payload['password'], $payload['must_change_password']);
             $this->session->set_flashdata('old_input', $payload);
-            $this->set_flash('danger', 'Registration could not be completed. Please try again.');
+            $this->set_flash(
+                'danger',
+                'Registration could not be completed. Check your information and try again.'
+            );
             redirect('register');
             return;
         }
 
         /*
-         * Do not place the generated plaintext password in session flashdata.
-         * Sessions are database-backed, so doing that would temporarily store
-         * the plaintext password in ci_sessions. Render it directly instead.
+         * Only the email is carried to the next request. The plaintext generated
+         * password is rendered directly and never written to ci_sessions.
          */
-        $this->output
-            ->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0')
-            ->set_header('Pragma: no-cache')
-            ->set_header('Expires: 0');
+        $this->session->set_flashdata('old_email', $payload['email']);
 
         $this->load->view('auth/registration_password.php', array(
-            'generated_password' => $plain_password,
-            'registration_email' => $payload['email']
+            'generated_password' => $plain_password
         ));
     }
 
@@ -209,7 +257,7 @@ class Auth extends CI_Controller
         {
             $this->session->set_flashdata(
                 'password_validation_errors',
-                array('new_password' => 'Your new password must be different from your generated password.')
+                array('new_password' => 'Your new password must be different from your current password.')
             );
             redirect('dashboard');
             return;
@@ -217,9 +265,17 @@ class Auth extends CI_Controller
 
         $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
 
+        if ($password_hash === FALSE)
+        {
+            $this->set_flash('danger', 'Your password could not be secured. Please try again.');
+            redirect('dashboard');
+            return;
+        }
+
         if ($this->User_model->update_password_and_clear_prompt($user_id, $password_hash))
         {
             $this->session->set_userdata('user_password_prompt_pending', FALSE);
+            $this->session->sess_regenerate(TRUE);
             $this->set_flash('success', 'Your password was changed successfully.');
         }
         else
@@ -235,6 +291,12 @@ class Auth extends CI_Controller
         $this->require_post();
         $this->require_authenticated_user();
 
+        if (!$this->session->userdata('user_password_prompt_pending'))
+        {
+            redirect('dashboard');
+            return;
+        }
+
         $user_id = (int) $this->session->userdata('user_id');
 
         if ($this->User_model->clear_password_prompt($user_id))
@@ -242,7 +304,7 @@ class Auth extends CI_Controller
             $this->session->set_userdata('user_password_prompt_pending', FALSE);
             $this->set_flash(
                 'info',
-                'Password change skipped. The first-login prompt will not appear again.'
+                'Password change skipped. This first-login prompt will not appear again.'
             );
         }
         else
@@ -259,6 +321,22 @@ class Auth extends CI_Controller
 
         $this->session->sess_destroy();
         redirect('login');
+    }
+
+    public function valid_name($name)
+    {
+        $name = trim((string) $name);
+
+        if (!preg_match("/^[\p{L}\p{M}][\p{L}\p{M} .'-]{0,99}$/u", $name))
+        {
+            $this->form_validation->set_message(
+                'valid_name',
+                'The {field} field may contain letters, spaces, apostrophes, periods, and hyphens only.'
+            );
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     public function valid_birthday($birthday)
@@ -284,7 +362,10 @@ class Auth extends CI_Controller
 
         if ($date < $minimum)
         {
-            $this->form_validation->set_message('valid_birthday', 'The {field} field must be on or after January 1, 1900.');
+            $this->form_validation->set_message(
+                'valid_birthday',
+                'The {field} field must be on or after January 1, 1900.'
+            );
             return FALSE;
         }
 
@@ -293,11 +374,24 @@ class Auth extends CI_Controller
 
     public function valid_contactno($contactno)
     {
-        if (!preg_match('/^[0-9+()\-\s]{7,20}$/', (string) $contactno))
+        $contactno = trim((string) $contactno);
+
+        if (!preg_match('/^[0-9+()\-\s]{7,20}$/', $contactno))
         {
             $this->form_validation->set_message(
                 'valid_contactno',
-                'The {field} field must contain 7 to 20 valid phone characters.'
+                'The {field} field contains unsupported characters.'
+            );
+            return FALSE;
+        }
+
+        $digit_count = strlen(preg_replace('/\D+/', '', $contactno));
+
+        if ($digit_count < 7 || $digit_count > 15)
+        {
+            $this->form_validation->set_message(
+                'valid_contactno',
+                'The {field} field must contain between 7 and 15 digits.'
             );
             return FALSE;
         }
@@ -321,6 +415,7 @@ class Auth extends CI_Controller
         $password = (string) $password;
 
         if (
+            preg_match('/\s/', $password) ||
             !preg_match('/[A-Z]/', $password) ||
             !preg_match('/[a-z]/', $password) ||
             !preg_match('/[0-9]/', $password) ||
@@ -329,7 +424,7 @@ class Auth extends CI_Controller
         {
             $this->form_validation->set_message(
                 'strong_password',
-                'The {field} field must contain uppercase, lowercase, number, and symbol characters.'
+                'The {field} field must use uppercase, lowercase, a number, a symbol, and no spaces.'
             );
             return FALSE;
         }
@@ -339,10 +434,26 @@ class Auth extends CI_Controller
 
     private function set_registration_rules()
     {
-        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required|callback_valid_birthday');
-        $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[255]');
+        $this->form_validation->set_rules(
+            'firstname',
+            'First name',
+            'trim|required|max_length[100]|callback_valid_name'
+        );
+        $this->form_validation->set_rules(
+            'lastname',
+            'Last name',
+            'trim|required|max_length[100]|callback_valid_name'
+        );
+        $this->form_validation->set_rules(
+            'birthday',
+            'Birthday',
+            'trim|required|callback_valid_birthday'
+        );
+        $this->form_validation->set_rules(
+            'address',
+            'Address',
+            'trim|required|min_length[5]|max_length[255]'
+        );
         $this->form_validation->set_rules(
             'contactno',
             'Contact number',
@@ -399,35 +510,20 @@ class Auth extends CI_Controller
         $this->session->set_userdata(array(
             'logged_in' => TRUE,
             'user_id' => (int) $user['Id'],
-            'user_firstname' => $user['firstname'],
-            'user_lastname' => $user['lastname'],
-            'user_email' => $user['email'],
+            'user_firstname' => (string) $user['firstname'],
+            'user_lastname' => (string) $user['lastname'],
+            'user_email' => (string) $user['email'],
             'user_password_prompt_pending' => ((int) $user['must_change_password'] === 1)
         ));
     }
 
-    private function record_failed_login()
-    {
-        $attempts = (int) $this->session->userdata('login_attempts') + 1;
-        $this->session->set_userdata('login_attempts', $attempts);
-
-        if ($attempts >= 5)
-        {
-            $this->session->set_userdata('login_lock_until', time() + 60);
-            $this->session->set_userdata('login_attempts', 0);
-        }
-    }
-
-    private function clear_login_attempts()
-    {
-        $this->session->unset_userdata(array('login_attempts', 'login_lock_until'));
-    }
-
     private function set_flash($type, $message)
     {
+        $allowed_types = array('success', 'danger', 'warning', 'info');
+
         $this->session->set_flashdata('flash', array(
-            'type' => $type,
-            'message' => $message
+            'type' => in_array($type, $allowed_types, TRUE) ? $type : 'info',
+            'message' => (string) $message
         ));
     }
 
