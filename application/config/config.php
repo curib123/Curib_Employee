@@ -1,11 +1,27 @@
 <?php
 /**
  * application/config/config.php | 2026-09-21
- * Core application, database-backed session, cookie, and CSRF settings.
+ * Core application, security, cookie, CSRF, and database-session configuration.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$config['base_url'] = getenv('APP_BASE_URL') ?: 'http://localhost/Curib_Employee/';
+$app_base_url = getenv('APP_BASE_URL');
+
+if (!$app_base_url)
+{
+    $https = isset($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';
+    $scheme = $https ? 'https' : 'http';
+    $host = isset($_SERVER['HTTP_HOST'])
+        ? preg_replace('/[^A-Za-z0-9.\-:\[\]]/', '', (string) $_SERVER['HTTP_HOST'])
+        : 'localhost';
+    $script_name = isset($_SERVER['SCRIPT_NAME']) ? (string) $_SERVER['SCRIPT_NAME'] : '/index.php';
+    $base_path = str_replace('\\', '/', dirname($script_name));
+    $base_path = $base_path === '/' ? '' : rtrim($base_path, '/');
+
+    $app_base_url = $scheme . '://' . ($host ?: 'localhost') . $base_path . '/';
+}
+
+$config['base_url'] = rtrim($app_base_url, '/') . '/';
 $config['index_page'] = '';
 $config['uri_protocol'] = 'REQUEST_URI';
 $config['url_suffix'] = '';
@@ -20,7 +36,7 @@ $config['controller_trigger'] = 'c';
 $config['function_trigger'] = 'm';
 $config['directory_trigger'] = 'd';
 $config['allow_get_array'] = TRUE;
-$config['log_threshold'] = 1;
+$config['log_threshold'] = ENVIRONMENT === 'production' ? 1 : 2;
 $config['log_path'] = '';
 $config['log_file_extension'] = '';
 $config['log_file_permissions'] = 0644;
@@ -29,14 +45,25 @@ $config['error_views_path'] = '';
 $config['cache_path'] = '';
 $config['cache_query_string'] = FALSE;
 
-$config['encryption_key'] = getenv('CI_ENCRYPTION_KEY') ?: 'curib-employee-change-this-key';
+$encryption_key = getenv('CI_ENCRYPTION_KEY');
+
+if (!$encryption_key)
+{
+    if (ENVIRONMENT === 'production')
+    {
+        header('HTTP/1.1 500 Internal Server Error');
+        exit('CI_ENCRYPTION_KEY must be configured in production.');
+    }
+
+    $encryption_key = hash('sha256', APPPATH . php_uname('n') . __FILE__);
+}
+
+$config['encryption_key'] = $encryption_key;
 
 /*
 |--------------------------------------------------------------------------
 | Database-backed sessions
 |--------------------------------------------------------------------------
-| CI3 stores the current session in the ci_sessions table.
-| sess_destroy() deletes the current session row during logout.
 */
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'curib_employee_session';
@@ -46,10 +73,13 @@ $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = TRUE;
 
+$is_https = isset($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';
+$secure_cookie_env = filter_var(getenv('COOKIE_SECURE') ?: '0', FILTER_VALIDATE_BOOLEAN);
+
 $config['cookie_prefix'] = '';
 $config['cookie_domain'] = '';
 $config['cookie_path'] = '/';
-$config['cookie_secure'] = filter_var(getenv('COOKIE_SECURE') ?: '0', FILTER_VALIDATE_BOOLEAN);
+$config['cookie_secure'] = $secure_cookie_env || $is_https;
 $config['cookie_httponly'] = TRUE;
 $config['cookie_samesite'] = 'Lax';
 
