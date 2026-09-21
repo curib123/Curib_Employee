@@ -253,3 +253,62 @@ textarea.form-control {
         transition-duration: 0.01ms !important;
     }
 }
+
+
+/* Error pages */
+.error-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 1.5rem;
+    background: var(--curib-bg);
+}
+
+.error-card {
+    width: min(100%, 36rem);
+    padding: 2.5rem;
+    border: 1px solid var(--curib-border);
+    border-radius: 1.5rem;
+    background: var(--curib-surface);
+    box-shadow: var(--curib-shadow);
+    text-align: center;
+}
+
+.error-brand {
+    margin: 0 auto 1.25rem;
+}
+
+.error-code {
+    margin: 0 0 0.5rem;
+    color: var(--curib-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.error-card h1 {
+    margin: 0 0 0.75rem;
+}
+
+.error-card p {
+    color: var(--curib-muted);
+}
+
+.error-detail {
+    overflow-wrap: anywhere;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.82rem;
+}
+
+.error-link {
+    display: inline-flex;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.8rem;
+    background: var(--curib-primary);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
