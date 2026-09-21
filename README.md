@@ -163,3 +163,33 @@ COOKIE_SECURE
 ~~~
 
 For production, use HTTPS, CI_ENV=production, a strong encryption key, COOKIE_SECURE=true, and a database account with only the required permissions.
+
+
+## Database sessions
+
+CodeIgniter sessions are stored in the MySQL table:
+
+~~~text
+ci_sessions
+~~~
+
+Configuration:
+
+~~~text
+sess_driver = database
+sess_save_path = ci_sessions
+sess_expiration = 7200
+sess_regenerate_destroy = TRUE
+~~~
+
+The authenticated session contains values such as the logged-in user ID, name, email, login state, and first-login password-prompt flag.
+
+The generated plaintext registration password is **not** stored in `ci_sessions`. It is rendered directly in the registration response and then discarded from server-side application state.
+
+On Logout, `$this->session->sess_destroy()` removes the current authenticated session row and clears the session cookie. After the redirect to Login, CodeIgniter may create a new anonymous session row for the new Login request; that row is a different session and does not contain the authenticated user state.
+
+For an existing installation that does not yet have the session table, import:
+
+~~~text
+database/add_database_sessions.sql
+~~~
