@@ -1,7 +1,7 @@
 <?php
 /**
  * application/config/config.php | 2026-09-21
- * Core application, secure session, cookie, and CSRF settings.
+ * Core application, database-backed session, cookie, and CSRF settings.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -30,10 +30,18 @@ $config['cache_path'] = '';
 $config['cache_query_string'] = FALSE;
 
 $config['encryption_key'] = getenv('CI_ENCRYPTION_KEY') ?: 'curib-employee-change-this-key';
-$config['sess_driver'] = 'files';
+
+/*
+|--------------------------------------------------------------------------
+| Database-backed sessions
+|--------------------------------------------------------------------------
+| CI3 stores the current session in the ci_sessions table.
+| sess_destroy() deletes the current session row during logout.
+*/
+$config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'curib_employee_session';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = sys_get_temp_dir();
+$config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = TRUE;
