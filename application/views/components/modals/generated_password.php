@@ -16,20 +16,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     data-bs-keyboard="false"
 >
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg overflow-hidden">
-            <div class="modal-header border-0 pb-0">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 bg-body-tertiary px-4 pt-4 pb-3">
                 <div>
                     <span class="badge rounded-pill text-bg-success mb-2">Registration complete</span>
                     <h1 class="modal-title fs-4" id="generatedPasswordModalLabel">Save your generated password</h1>
                 </div>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body p-4">
                 <p class="text-secondary">
                     Copy this password now. You will use it with your email on the Login page.
                 </p>
 
-                <div class="border rounded-3 bg-body-tertiary p-3 text-center fw-bold font-monospace text-break" id="generatedPasswordValue">
+                <div class="alert alert-light border rounded-3 p-3 text-center fw-bold font-monospace text-break fs-5 mb-0" id="generatedPasswordValue">
                     <?= html_escape($generated_password); ?>
                 </div>
 
@@ -38,10 +38,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div class="modal-footer border-0 pt-0">
+            <div class="modal-footer border-0 bg-body-tertiary p-4 pt-3">
                 <button
                     type="button"
-                    class="btn btn-primary w-100"
+                    class="btn btn-primary btn-lg w-100"
                     id="copyPasswordButton"
                     data-login-url="<?= html_escape(site_url('login')); ?>"
                 >
