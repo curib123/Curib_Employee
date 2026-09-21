@@ -184,7 +184,7 @@ $validation_id = isset($validation_context['id']) ? (int) $validation_context['i
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <dl class="row mb-0 profile-list">
+                <dl class="row mb-0">
                     <dt class="col-sm-4">ID</dt>
                     <dd class="col-sm-8" id="infoId"></dd>
 
