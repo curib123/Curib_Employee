@@ -11,10 +11,10 @@ $first_name = isset($current_user['firstname']) ? $current_user['firstname'] : '
 $last_name = isset($current_user['lastname']) ? $current_user['lastname'] : '';
 $full_name = trim($first_name . ' ' . $last_name);
 ?>
-<nav class="navbar navbar-expand-lg app-navbar sticky-top">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="<?= html_escape(site_url('dashboard')); ?>">
-            <span class="brand-mark" aria-hidden="true">C</span>
+            <span class="badge text-bg-primary fs-5 p-2" aria-hidden="true">C</span>
             <span>Curib Employee</span>
         </a>
 
