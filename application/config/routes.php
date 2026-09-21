@@ -13,7 +13,6 @@ $route['login']['get'] = 'auth/login';
 $route['login']['post'] = 'auth/login_submit';
 $route['register']['get'] = 'auth/register';
 $route['register']['post'] = 'auth/register_submit';
-$route['registration-password']['get'] = 'auth/registration_password';
 $route['password/change']['post'] = 'auth/change_password';
 $route['password/skip']['post'] = 'auth/skip_password_change';
 $route['logout']['post'] = 'auth/logout';
