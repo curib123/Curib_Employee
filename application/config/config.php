@@ -7,6 +7,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 $app_base_url = getenv('APP_BASE_URL');
 
+if (!$app_base_url && ENVIRONMENT === 'production')
+{
+    header('HTTP/1.1 500 Internal Server Error');
+    exit('APP_BASE_URL must be configured in production.');
+}
+
 if (!$app_base_url)
 {
     $https = isset($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';
