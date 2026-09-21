@@ -1,6 +1,6 @@
 /**
  * assets/js/auth.js | 2026-09-21
- * Registration password copy-and-continue behavior.
+ * Registration password copy-and-go-to-login behavior.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -39,15 +39,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 fallbackCopy(password);
             }
 
-            copyButton.textContent = 'Copied! Opening Dashboard...';
+            copyButton.textContent = 'Copied! Opening Login...';
             copyButton.disabled = true;
 
             window.setTimeout(function () {
-                window.location.href = copyButton.dataset.dashboardUrl;
+                window.location.href = copyButton.dataset.loginUrl;
             }, 650);
         } catch (error) {
             fallbackCopy(password);
-            window.location.href = copyButton.dataset.dashboardUrl;
+            window.location.href = copyButton.dataset.loginUrl;
         }
     });
 });
