@@ -165,6 +165,11 @@ class Auth extends CI_Controller
             return;
         }
 
+        $this->output
+            ->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0')
+            ->set_header('Pragma: no-cache')
+            ->set_header('Expires: 0');
+
         $data = array(
             'generated_password' => $generated_password,
             'current_user' => array(
