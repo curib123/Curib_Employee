@@ -1,22 +1,24 @@
 /**
  * assets/js/employees.js | 2026-09-21
- * Bootstrap modal behavior and client-side validation for Employee CRUD.
+ * Employee modal actions for create, update, delete, and information display.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
     const employeeModalElement = document.getElementById('employeeModal');
-    const deleteModalElement = document.getElementById('deleteModal');
-    const infoModalElement = document.getElementById('infoModal');
-    const alertModalElement = document.getElementById('alertModal');
+    const deleteModalElement = document.getElementById('deleteEmployeeModal');
+    const infoModalElement = document.getElementById('employeeInfoModal');
     const employeeForm = document.getElementById('employeeForm');
-    const deleteForm = document.getElementById('deleteForm');
+    const deleteForm = document.getElementById('deleteEmployeeForm');
+
+    if (!employeeModalElement || !deleteModalElement || !infoModalElement || !employeeForm || !deleteForm) {
+        return;
+    }
 
     const employeeModal = bootstrap.Modal.getOrCreateInstance(employeeModalElement);
     const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalElement);
     const infoModal = bootstrap.Modal.getOrCreateInstance(infoModalElement);
-    const alertModal = bootstrap.Modal.getOrCreateInstance(alertModalElement);
 
     const modalTitle = document.getElementById('employeeModalLabel');
     const submitButton = document.getElementById('employeeSubmitButton');
@@ -107,21 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-action="delete"]').forEach(function (button) {
         button.addEventListener('click', function () {
             const fullName =
-                (button.dataset.firstname || '') + ' ' + (button.dataset.lastname || '');
+                ((button.dataset.firstname || '') + ' ' + (button.dataset.lastname || '')).trim();
 
-            document.getElementById('deleteEmployeeName').textContent = fullName.trim();
+            document.getElementById('deleteEmployeeName').textContent = fullName || 'this employee';
             deleteForm.action = endpoint(deleteForm.dataset.deleteUrl, button.dataset.id);
             deleteModal.show();
         });
-    });
-
-    employeeForm.addEventListener('submit', function (event) {
-        if (!employeeForm.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        employeeForm.classList.add('was-validated');
     });
 
     const validationMode = employeeModalElement.dataset.validationMode;
@@ -131,20 +124,5 @@ document.addEventListener('DOMContentLoaded', function () {
         configureUpdateMode(validationId);
     } else if (validationMode === 'create') {
         configureCreateMode(false);
-    }
-
-    const shouldShowAlert = alertModalElement.dataset.autoShow === '1';
-    const shouldReopenUpsert = alertModalElement.dataset.reopenUpsert === '1';
-
-    if (shouldShowAlert) {
-        if (shouldReopenUpsert) {
-            alertModalElement.addEventListener('hidden.bs.modal', function () {
-                employeeModal.show();
-            }, { once: true });
-        }
-
-        alertModal.show();
-    } else if (validationMode === 'create' || validationMode === 'update') {
-        employeeModal.show();
     }
 });
