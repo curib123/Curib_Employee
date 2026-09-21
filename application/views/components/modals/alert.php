@@ -41,12 +41,12 @@ elseif ($has_flash)
     data-reopen-modal="<?= html_escape($reopen_modal); ?>"
 >
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header text-bg-<?= html_escape($alert_type); ?>">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header border-0 text-bg-<?= html_escape($alert_type); ?> px-4 py-3">
                 <h2 class="modal-title fs-5" id="alertModalLabel"><?= html_escape($alert_title); ?></h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-4">
                 <?php if ($has_validation_errors): ?>
                     <p class="mb-2">Correct the following before continuing:</p>
                     <ul class="mb-0">
@@ -58,8 +58,8 @@ elseif ($has_flash)
                     <p class="mb-0"><?= html_escape(isset($flash['message']) ? $flash['message'] : ''); ?></p>
                 <?php endif; ?>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">OK</button>
+            <div class="modal-footer border-0 bg-body-tertiary px-4 py-3">
+                <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
