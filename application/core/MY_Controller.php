@@ -13,6 +13,10 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
 
+        $this->output
+            ->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0')
+            ->set_header('Pragma: no-cache');
+
         if (!$this->session->userdata('logged_in'))
         {
             $this->session->set_flashdata('flash', array(
@@ -42,9 +46,11 @@ class MY_Controller extends CI_Controller
 
     protected function set_flash($type, $message)
     {
+        $allowed_types = array('success', 'danger', 'warning', 'info');
+
         $this->session->set_flashdata('flash', array(
-            'type' => $type,
-            'message' => $message
+            'type' => in_array($type, $allowed_types, TRUE) ? $type : 'info',
+            'message' => (string) $message
         ));
     }
 }
