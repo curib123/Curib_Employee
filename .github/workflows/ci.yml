@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -56,7 +56,7 @@ jobs:
           php -l index.php
           while IFS= read -r -d '' file; do
             php -l "$file"
-          done < <(find application -type f \( -name '*.php' -o -name '*.html' \) -print0)
+          done < <(find application tests -type f \( -name '*.php' -o -name '*.html' \) -print0)
 
       - name: JavaScript syntax check
         run: |
@@ -85,6 +85,8 @@ jobs:
           fi
 
           grep -q "cdn.jsdelivr.net" .htaccess
+          grep -q "integrity=" application/views/auth/login.php
+          grep -q "integrity=" application/views/auth/register.php
           grep -q "CREATE TABLE IF NOT EXISTS \`ci_sessions\`" database/curib.sql
           grep -q "CREATE TABLE IF NOT EXISTS \`login_attempts\`" database/curib.sql
 
@@ -108,21 +110,21 @@ jobs:
       - name: Start application
         shell: bash
         run: |
-          php -S 127.0.0.1:8080 index.php > /tmp/curib-php-server.log 2>&1 &
+          php -S 127.0.0.1:8080 tests/router.php > /tmp/curib-php-server.log 2>&1 &
           echo $! > /tmp/curib-php-server.pid
           sleep 2
 
-      - name: Smoke test public routes
+      - name: End-to-end smoke test
+        run: python3 tests/smoke.py
+
+      - name: Verify smoke-test database state
         shell: bash
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --cookie-jar /tmp/cookies.txt http://127.0.0.1:8080/login > /tmp/login.html
-          grep -q "Sign in" /tmp/login.html
-          grep -q "bootstrap@5.3.3" /tmp/login.html
-
-          curl --fail --silent --show-error --cookie /tmp/cookies.txt --cookie-jar /tmp/cookies.txt http://127.0.0.1:8080/register > /tmp/register.html
-          grep -q "Create your account" /tmp/register.html
-          grep -q "Register &amp; Generate Password" /tmp/register.html
+          test "$(mysql -h 127.0.0.1 -uroot -proot -Nse "SELECT COUNT(*) FROM Curib.users WHERE email='ci-smoke@example.com';")" = "1"
+          test "$(mysql -h 127.0.0.1 -uroot -proot -Nse "SELECT must_change_password FROM Curib.users WHERE email='ci-smoke@example.com';")" = "0"
+          test "$(mysql -h 127.0.0.1 -uroot -proot -Nse "SELECT COUNT(*) FROM Curib.employee WHERE firstname='Smoke' AND lastname='Tester';")" = "1"
+          test "$(mysql -h 127.0.0.1 -uroot -proot -Nse "SELECT COUNT(*) FROM Curib.login_attempts;")" = "0"
 
       - name: Show server log on failure
         if: failure()
