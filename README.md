@@ -10,7 +10,7 @@ The registration and first-login flow is:
 
 1. User registers with first name, last name, birthday, address, contact number, and email.
 2. The server validates the data and checks that the email is unique.
-3. The server generates a strong 14-character password.
+3. The server generates a strong 16-character password.
 4. Only the password hash is stored in MySQL.
 5. A one-time Bootstrap modal shows the generated password.
 6. **Copy Password & Go to Login** copies it and opens Login.
@@ -39,7 +39,7 @@ New users begin with 1. Both successful password change and Skip set it to 0.
 - Plaintext passwords are never stored in MySQL.
 - The generated-password page uses no-store/no-cache response headers.
 - Session ID is regenerated on successful authentication.
-- Login has session-based throttling after repeated failures.
+- Login uses persistent database-backed throttling by hashed email identifier and IP after repeated failures.
 - CSRF protection is globally enabled.
 - Logout, password change, password skip, and Employee CRUD mutations use POST.
 - CodeIgniter Query Builder handles database values.
@@ -51,7 +51,6 @@ New users begin with 1. Both successful password change and Skip set it to 0.
 ~~~text
 /login
 /register
-/registration-password
 /dashboard
 /employees
 /password/change
@@ -141,7 +140,7 @@ The first-login password modal cannot be dismissed by clicking the backdrop or p
 
 ## UI
 
-- Bootstrap 5
+- Bootstrap 5.3.3 from the pinned jsDelivr CDN
 - Dashboard and Employees top navigation
 - Responsive layouts
 - External assets/css/app.css
@@ -188,8 +187,23 @@ The generated plaintext registration password is **not** stored in `ci_sessions`
 
 On Logout, `$this->session->sess_destroy()` removes the current authenticated session row and clears the session cookie. After the redirect to Login, CodeIgniter may create a new anonymous session row for the new Login request; that row is a different session and does not contain the authenticated user state.
 
-For an existing installation that does not yet have the session table, import:
+For an existing installation that does not yet have the session/throttling tables, import:
 
 ~~~text
 database/add_database_sessions.sql
 ~~~
+
+
+## Bootstrap and custom styling
+
+The interface uses Bootstrap 5.3.3 for its responsive grid, navigation, forms, tables, buttons, validation states, and modal behavior.
+
+Bootstrap is loaded from the pinned jsDelivr 5.3.3 URLs. The Apache Content-Security-Policy explicitly allows only that CDN in addition to same-origin assets.
+
+All project-specific visual design and animation stays in:
+
+~~~text
+assets/css/app.css
+~~~
+
+There is no inline or internal CSS. JavaScript behavior remains in external files under assets/js/.
