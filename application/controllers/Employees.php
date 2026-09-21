@@ -1,11 +1,11 @@
 <?php
 /**
  * application/controllers/Employees.php | 2026-09-21
- * Employee CRUD controller with validation, CSRF-aware forms, and age calculation.
+ * Protected Employee CRUD controller with validation and age calculation.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Employees extends CI_Controller
+class Employees extends MY_Controller
 {
     public function __construct()
     {
@@ -15,9 +15,6 @@ class Employees extends CI_Controller
         $this->load->library('form_validation');
     }
 
-    /**
-     * Show the employee list and all Bootstrap CRUD modals.
-     */
     public function index()
     {
         $employees = $this->Employee_model->get_all();
@@ -29,6 +26,7 @@ class Employees extends CI_Controller
         unset($employee);
 
         $data = array(
+            'current_user' => $this->current_user,
             'employees' => $employees,
             'today' => date('Y-m-d'),
             'flash' => $this->session->flashdata('flash'),
@@ -40,9 +38,6 @@ class Employees extends CI_Controller
         $this->load->view('employees/index.html', $data);
     }
 
-    /**
-     * Create a new employee.
-     */
     public function store()
     {
         $this->require_post();
@@ -57,29 +52,21 @@ class Employees extends CI_Controller
             return;
         }
 
-        if ($this->Employee_model->insert($payload))
-        {
-            $this->set_flash('success', 'Employee added successfully.');
-        }
-        else
-        {
-            $this->set_flash('danger', 'The employee could not be added.');
-        }
+        $this->set_flash(
+            $this->Employee_model->insert($payload) ? 'success' : 'danger',
+            $this->db->affected_rows() > 0 ? 'Employee added successfully.' : 'The employee could not be added.'
+        );
 
         redirect('employees');
     }
 
-    /**
-     * Update an existing employee.
-     */
     public function update($id)
     {
         $this->require_post();
 
         $id = (int) $id;
-        $employee = $this->Employee_model->find($id);
 
-        if (!$employee)
+        if (!$this->Employee_model->find($id))
         {
             $this->set_flash('danger', 'Employee not found.');
             redirect('employees');
@@ -108,17 +95,13 @@ class Employees extends CI_Controller
         redirect('employees');
     }
 
-    /**
-     * Delete an employee after modal confirmation.
-     */
     public function delete($id)
     {
         $this->require_post();
 
         $id = (int) $id;
-        $employee = $this->Employee_model->find($id);
 
-        if (!$employee)
+        if (!$this->Employee_model->find($id))
         {
             $this->set_flash('danger', 'Employee not found.');
             redirect('employees');
@@ -137,9 +120,6 @@ class Employees extends CI_Controller
         redirect('employees');
     }
 
-    /**
-     * Server-side birthday validation.
-     */
     public function valid_birthday($birthday)
     {
         $birthday = trim((string) $birthday);
@@ -170,9 +150,6 @@ class Employees extends CI_Controller
         return TRUE;
     }
 
-    /**
-     * Contact number accepts digits plus common phone separators only.
-     */
     public function valid_contactno($contactno)
     {
         if (!preg_match('/^[0-9+()\-\s]{7,20}$/', (string) $contactno))
@@ -187,31 +164,12 @@ class Employees extends CI_Controller
         return TRUE;
     }
 
-    /**
-     * Configure reusable server-side validation rules.
-     */
     private function set_validation_rules()
     {
-        $this->form_validation->set_rules(
-            'firstname',
-            'First name',
-            'trim|required|max_length[100]'
-        );
-        $this->form_validation->set_rules(
-            'lastname',
-            'Last name',
-            'trim|required|max_length[100]'
-        );
-        $this->form_validation->set_rules(
-            'birthday',
-            'Birthday',
-            'trim|required|callback_valid_birthday'
-        );
-        $this->form_validation->set_rules(
-            'address',
-            'Address',
-            'trim|required|max_length[255]'
-        );
+        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]');
+        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]');
+        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required|callback_valid_birthday');
+        $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[255]');
         $this->form_validation->set_rules(
             'contactno',
             'Contact number',
@@ -219,10 +177,6 @@ class Employees extends CI_Controller
         );
     }
 
-    /**
-     * Read only the expected fields from POST.
-     * CI input filtering plus Query Builder parameter escaping protects database writes.
-     */
     private function employee_payload()
     {
         return array(
@@ -234,9 +188,6 @@ class Employees extends CI_Controller
         );
     }
 
-    /**
-     * Keep submitted data and validation errors across the redirect.
-     */
     private function preserve_validation_state($mode, $id, $payload)
     {
         $this->session->set_flashdata('validation_errors', $this->form_validation->error_array());
@@ -247,20 +198,6 @@ class Employees extends CI_Controller
         ));
     }
 
-    /**
-     * Save a one-time Bootstrap alert-modal message.
-     */
-    private function set_flash($type, $message)
-    {
-        $this->session->set_flashdata('flash', array(
-            'type' => $type,
-            'message' => $message
-        ));
-    }
-
-    /**
-     * Derive age from birthday so age never becomes stale in the database.
-     */
     private function calculate_age($birthday)
     {
         try
@@ -271,17 +208,6 @@ class Employees extends CI_Controller
         catch (Exception $exception)
         {
             return 0;
-        }
-    }
-
-    /**
-     * CRUD mutations must never accept GET requests.
-     */
-    private function require_post()
-    {
-        if (strtoupper($this->input->method()) !== 'POST')
-        {
-            show_error('Method Not Allowed', 405);
         }
     }
 }
