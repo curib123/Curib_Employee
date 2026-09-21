@@ -5,9 +5,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$asset_url = function_exists('base_url') ? base_url('assets/css/app.css') : 'assets/css/app.css';
 $home_url = function_exists('site_url') ? site_url() : '/';
-$safe_asset_url = htmlspecialchars((string) $asset_url, ENT_QUOTES, 'UTF-8');
 $safe_home_url = htmlspecialchars((string) $home_url, ENT_QUOTES, 'UTF-8');
 
 $safe_message = htmlspecialchars(strip_tags((string) $message), ENT_QUOTES, 'UTF-8');
@@ -20,15 +18,15 @@ $safe_line = (int) $line;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PHP Error | Curib Employee</title>
-    <link href="<?= $safe_asset_url; ?>" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body class="error-page">
-    <main class="error-card">
-        <div class="brand-mark error-brand" aria-hidden="true">C</div>
-        <p class="error-code">PHP</p>
-        <h1>Application diagnostic</h1>
-        <p><?= $safe_message; ?></p>
-        <p class="error-detail"><?= $safe_filepath; ?>:<?= $safe_line; ?></p>
+<body class="min-vh-100 d-flex align-items-center justify-content-center bg-body-tertiary p-4">
+    <main class="container text-center bg-white border rounded-4 shadow-sm p-5">
+        <div class="badge text-bg-primary fs-4 p-2 mb-3" aria-hidden="true">C</div>
+        <p class="text-uppercase small fw-bold text-primary mb-2">PHP</p>
+        <h1 class="h2 mb-3">Application diagnostic</h1>
+        <p class="text-secondary"><?= $safe_message; ?></p>
+        <p class="small font-monospace text-break text-secondary"><?= $safe_filepath; ?>:<?= $safe_line; ?></p>
     </main>
 </body>
 </html>
