@@ -1,5 +1,5 @@
 -- database/curib.sql | 2026-09-21
--- Fresh database schema for Curib Employee with authentication and database sessions.
+-- Fresh Curib Employee schema with authentication, DB sessions, and login throttling.
 
 CREATE DATABASE IF NOT EXISTS `Curib`
     CHARACTER SET utf8mb4
@@ -44,6 +44,19 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
     `data` BLOB NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `ci_sessions_timestamp` (`timestamp`)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `login_attempts` (
+    `identifier_hash` CHAR(64) NOT NULL,
+    `ip_address` VARCHAR(45) NOT NULL,
+    `attempt_count` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    `last_attempt_at` INT UNSIGNED NOT NULL DEFAULT 0,
+    `locked_until` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY (`identifier_hash`, `ip_address`),
+    INDEX `idx_login_attempts_locked_until` (`locked_until`),
+    INDEX `idx_login_attempts_last_attempt` (`last_attempt_at`)
 ) ENGINE=InnoDB
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_unicode_ci;
