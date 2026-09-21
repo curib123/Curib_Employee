@@ -9,9 +9,6 @@ class Employee_model extends CI_Model
 {
     private $table = 'employee';
 
-    /**
-     * Return all employees ordered by last name and first name.
-     */
     public function get_all()
     {
         return $this->db
@@ -23,9 +20,6 @@ class Employee_model extends CI_Model
             ->result_array();
     }
 
-    /**
-     * Find one employee by primary key.
-     */
     public function find($id)
     {
         return $this->db
@@ -37,17 +31,16 @@ class Employee_model extends CI_Model
             ->row_array();
     }
 
-    /**
-     * Insert a validated employee record.
-     */
+    public function count_all()
+    {
+        return $this->db->count_all($this->table);
+    }
+
     public function insert($data)
     {
         return $this->db->insert($this->table, $data);
     }
 
-    /**
-     * Update a validated employee record.
-     */
     public function update($id, $data)
     {
         return $this->db
@@ -55,9 +48,6 @@ class Employee_model extends CI_Model
             ->update($this->table, $data);
     }
 
-    /**
-     * Delete an employee by primary key.
-     */
     public function delete($id)
     {
         return $this->db
