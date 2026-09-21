@@ -36,6 +36,7 @@ $full_name = trim($first_name . ' ' . $last_name);
                     <a
                         class="nav-link px-lg-3 rounded-3 <?= $active_nav === 'dashboard' ? 'active fw-semibold text-primary bg-primary-subtle' : 'text-body-secondary'; ?>"
                         href="<?= html_escape(site_url('dashboard')); ?>"
+                        <?= $active_nav === 'dashboard' ? 'aria-current="page"' : ''; ?>
                     >
                         Dashboard
                     </a>
@@ -44,6 +45,7 @@ $full_name = trim($first_name . ' ' . $last_name);
                     <a
                         class="nav-link px-lg-3 rounded-3 <?= $active_nav === 'employees' ? 'active fw-semibold text-primary bg-primary-subtle' : 'text-body-secondary'; ?>"
                         href="<?= html_escape(site_url('employees')); ?>"
+                        <?= $active_nav === 'employees' ? 'aria-current="page"' : ''; ?>
                     >
                         Employees
                     </a>
