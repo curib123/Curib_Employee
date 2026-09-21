@@ -1,195 +1,78 @@
-<!-- README.md | 2026-09-21 -->
-
 # Curib Employee
 
-A CodeIgniter 3 MVC employee management application with generated-password authentication, secure sessions, MySQL, and Bootstrap 5.
+A CodeIgniter 3 + MySQL employee management application with generated-password registration, database-backed sessions, first-login password handling, persistent login throttling, CSRF protection, and a custom responsive UI built with external HTML/CSS/JavaScript only.
 
-## Authentication flow
+## Requirements
 
-The registration and first-login flow is:
+- PHP 7.4–8.4 with `mysqli`
+- Composer
+- MySQL 5.7+ or MySQL 8+
+- Apache with `mod_rewrite`, or PHP's built-in development server
 
-1. User registers with first name, last name, birthday, address, contact number, and email.
-2. The server validates the data and checks that the email is unique.
-3. The server generates a strong 14-character password.
-4. Only the password hash is stored in MySQL.
-5. A one-time Bootstrap modal shows the generated password.
-6. **Copy Password & Go to Login** copies it and opens Login.
-7. The email is prefilled on Login; the user signs in using the generated password.
-8. On the first successful login only, Dashboard opens a **Change Password** modal.
-9. The user can either change the password or skip.
-10. After either Change or Skip, the modal does not appear on future logins.
+## Fresh clone
 
-If the user never chooses Change or Skip, the database flag remains pending.
-
-## First-login flag
-
-The users table contains:
-
-~~~text
-must_change_password TINYINT(1) NOT NULL DEFAULT 1
-~~~
-
-New users begin with 1. Both successful password change and Skip set it to 0.
-
-## Security
-
-- Generated passwords use random_int().
-- Passwords are hashed with password_hash(..., PASSWORD_DEFAULT).
-- Login verifies credentials with password_verify().
-- Plaintext passwords are never stored in MySQL.
-- The generated-password page uses no-store/no-cache response headers.
-- Session ID is regenerated on successful authentication.
-- Login has session-based throttling after repeated failures.
-- CSRF protection is globally enabled.
-- Logout, password change, password skip, and Employee CRUD mutations use POST.
-- CodeIgniter Query Builder handles database values.
-- User-facing output is escaped.
-- Cookies are HTTP-only and SameSite=Lax.
-
-## Main routes
-
-~~~text
-/login
-/register
-/registration-password
-/dashboard
-/employees
-/password/change
-/password/skip
-/logout
-~~~
-
-Authenticated pages use a top navigation only: **Dashboard**, **Employees**, user identity, and **Logout**.
-
-## Database
-
-Database: Curib
-
-### employee
-
-~~~text
-Id
-firstname
-lastname
-birthday
-address
-contactno
-~~~
-
-Age is derived from birthday; it is not stored.
-
-### users
-
-~~~text
-Id
-firstname
-lastname
-birthday
-address
-contactno
-email
-password
-must_change_password
-~~~
-
-Email is unique. Password contains only the password hash.
-
-## Fresh installation
-
-~~~bash
+```bash
 git clone https://github.com/curib123/Curib_Employee.git
 cd Curib_Employee
 composer install
-~~~
+```
 
-Import:
+Import `database/curib.sql` into MySQL. Local defaults are database `Curib`, user `root`, empty password. You can override them with `DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_NAME`.
 
-~~~text
-database/curib.sql
-~~~
+For a quick local server without Apache:
 
-## Existing database migration
+```bash
+php -S 127.0.0.1:8000 router.php
+```
 
-For an employee-only installation, import:
+Then open `http://127.0.0.1:8000`.
 
-~~~text
-database/add_user_auth.sql
-~~~
+## Authentication flow
 
-For an installation where the users table already exists but does not yet have the first-login flag, import:
+1. Register using first name, last name, birthday, address, contact number, and email.
+2. The server validates every field and checks email uniqueness.
+3. A strong 16-character password is generated with `random_int()` and only its `password_hash()` result is stored.
+4. A one-time modal shows the plaintext generated password so it can be copied.
+5. Login with the registered email and generated password.
+6. On the first successful login, choose **Change password** or **Skip**.
+7. Either choice clears `must_change_password`; the prompt does not appear on later logins.
+8. Logout destroys the authenticated database session and clears the session cookie.
 
-~~~text
-database/add_first_login_password_prompt.sql
-~~~
+## Security
 
-That migration adds must_change_password without deleting existing users.
+- Global CodeIgniter CSRF protection.
+- Database-backed `ci_sessions` sessions.
+- Session ID regeneration after login and password change.
+- Passwords hashed with PHP `PASSWORD_DEFAULT`; plaintext passwords are never stored.
+- Persistent per-email-hash + IP login throttling.
+- POST-only login mutations, password actions, logout, and employee CRUD mutations.
+- Query Builder for database writes and lookups.
+- Escaped user-facing output.
+- HTTP-only, SameSite=Lax cookies and optional secure cookies.
+- Content Security Policy, clickjacking protection, MIME sniffing protection, referrer policy, and permissions policy headers.
+- No Bootstrap, no external CDN dependency, no inline CSS, and no inline JavaScript.
 
-## Modal components
+For production set `CI_ENV=production`, a strong `CI_ENCRYPTION_KEY`, `COOKIE_SECURE=true`, HTTPS, and a restricted database account.
 
-All modal markup is under:
+## Database
 
-~~~text
-application/views/components/modals/
-├── alert.php
-├── change_password.php
-├── employee.php
-├── generated_password.php
-└── logout.php
-~~~
+Fresh installs use `database/curib.sql`, which creates:
 
-The first-login password modal cannot be dismissed by clicking the backdrop or pressing Escape; the user must choose either **Change Password** or **Skip**.
+- `employee`
+- `users`
+- `ci_sessions`
+- `login_attempts`
 
-## UI
+Existing employee-only databases can use `database/add_user_auth.sql`. Existing auth installs that only need the first-login flag can use `database/add_first_login_password_prompt.sql`. Existing installs missing only the session table can use `database/add_database_sessions.sql`.
 
-- Bootstrap 5
-- Dashboard and Employees top navigation
-- Responsive layouts
-- External assets/css/app.css
-- No inline CSS
-- Lightweight page/modal/button animations
-- Reduced-motion support
+## Verification
 
-## Environment variables
+After `composer install`, run:
 
-~~~text
-DB_HOST
-DB_USER
-DB_PASS
-DB_NAME
-APP_BASE_URL
-CI_ENCRYPTION_KEY
-CI_ENV
-COOKIE_SECURE
-~~~
+```bash
+composer verify
+```
 
-For production, use HTTPS, CI_ENV=production, a strong encryption key, COOKIE_SECURE=true, and a database account with only the required permissions.
+This checks required files, PHP syntax, JavaScript syntax when Node.js is available, CSRF/session/security configuration, password primitives, database schema requirements, and verifies that application views contain no Bootstrap/CDN/internal-style/inline-style/inline-script dependencies.
 
-
-## Database sessions
-
-CodeIgniter sessions are stored in the MySQL table:
-
-~~~text
-ci_sessions
-~~~
-
-Configuration:
-
-~~~text
-sess_driver = database
-sess_save_path = ci_sessions
-sess_expiration = 7200
-sess_regenerate_destroy = TRUE
-~~~
-
-The authenticated session contains values such as the logged-in user ID, name, email, login state, and first-login password-prompt flag.
-
-The generated plaintext registration password is **not** stored in `ci_sessions`. It is rendered directly in the registration response and then discarded from server-side application state.
-
-On Logout, `$this->session->sess_destroy()` removes the current authenticated session row and clears the session cookie. After the redirect to Login, CodeIgniter may create a new anonymous session row for the new Login request; that row is a different session and does not contain the authenticated user state.
-
-For an existing installation that does not yet have the session table, import:
-
-~~~text
-database/add_database_sessions.sql
-~~~
+GitHub Actions also runs a MySQL-backed browser-level smoke flow for registration, generated passwords, login, first-login skip/change behavior, and logout.
