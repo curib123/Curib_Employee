@@ -1,10 +1,5 @@
 <?php
-/**
- * application/views/employees/index.html | 2026-09-21
- * Protected employee list using the shared top nav and modal components.
- */
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 $active_nav = 'employees';
 $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
 ?>
@@ -13,128 +8,52 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
     <title>Employees | Curib Employee</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?= html_escape(base_url('assets/css/app.css')); ?>" rel="stylesheet">
+    <link rel="stylesheet" href="<?= html_escape(base_url('assets/css/app.css')); ?>">
 </head>
 <body>
-    <?php $this->load->view('components/top_nav.php'); ?>
-
-    <main class="container py-4 py-lg-5 page-enter">
-        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
-            <div>
-                <span class="badge rounded-pill text-bg-primary mb-2">Employee Management</span>
-                <h1 class="h2 fw-bold mb-1">Employees</h1>
-                <p class="text-secondary mb-0">
-                    Manage employee records with secure modal-based actions.
-                </p>
+<?php $this->load->view('components/top_nav.php'); ?>
+<main class="container page">
+    <header class="section-head">
+        <div><span class="badge">Employee management</span><h1>Employees</h1><p>Manage employee records with validated and protected actions.</p></div>
+        <button class="btn btn-primary" type="button" data-action="add-employee">Add employee</button>
+    </header>
+    <section class="card table-card" aria-labelledby="employeeDirectoryTitle">
+        <div class="table-head"><div><h2 id="employeeDirectoryTitle">Employee directory</h2><p>Age is calculated from birthday and is not stored.</p></div><span class="badge badge-neutral"><?= count($employees); ?> <?= count($employees) === 1 ? 'employee' : 'employees'; ?></span></div>
+        <?php if (empty($employees)): ?>
+            <div class="empty-state"><h3>No employees yet</h3><p>Create the first employee record to begin.</p><button class="btn btn-primary" type="button" data-action="add-employee">Add employee</button></div>
+        <?php else: ?>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th scope="col">ID</th><th scope="col">First name</th><th scope="col">Last name</th><th scope="col">Birthday</th><th scope="col">Age</th><th scope="col">Address</th><th scope="col">Contact</th><th scope="col">Actions</th></tr></thead>
+                    <tbody>
+                    <?php foreach ($employees as $employee): ?>
+                        <tr>
+                            <td><?= (int) $employee['Id']; ?></td>
+                            <td><strong><?= html_escape($employee['firstname']); ?></strong></td>
+                            <td><?= html_escape($employee['lastname']); ?></td>
+                            <td><?= html_escape(date('M d, Y', strtotime($employee['birthday']))); ?></td>
+                            <td><span class="badge badge-neutral"><?= (int) $employee['age']; ?></span></td>
+                            <td><?= html_escape($employee['address']); ?></td>
+                            <td><?= html_escape($employee['contactno']); ?></td>
+                            <td><div class="actions">
+                                <button class="btn btn-outline btn-sm" type="button" data-action="info" data-id="<?= (int) $employee['Id']; ?>" data-firstname="<?= html_escape($employee['firstname']); ?>" data-lastname="<?= html_escape($employee['lastname']); ?>" data-birthday="<?= html_escape($employee['birthday']); ?>" data-age="<?= (int) $employee['age']; ?>" data-address="<?= html_escape($employee['address']); ?>" data-contactno="<?= html_escape($employee['contactno']); ?>">Info</button>
+                                <button class="btn btn-outline-primary btn-sm" type="button" data-action="edit" data-id="<?= (int) $employee['Id']; ?>" data-firstname="<?= html_escape($employee['firstname']); ?>" data-lastname="<?= html_escape($employee['lastname']); ?>" data-birthday="<?= html_escape($employee['birthday']); ?>" data-address="<?= html_escape($employee['address']); ?>" data-contactno="<?= html_escape($employee['contactno']); ?>">Edit</button>
+                                <button class="btn btn-outline-danger btn-sm" type="button" data-action="delete" data-id="<?= (int) $employee['Id']; ?>" data-firstname="<?= html_escape($employee['firstname']); ?>" data-lastname="<?= html_escape($employee['lastname']); ?>">Delete</button>
+                            </div></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
-
-            <button type="button" class="btn btn-primary" data-action="add-employee">
-                Add Employee
-            </button>
-        </div>
-
-        <section class="surface-card overflow-hidden">
-            <div class="d-flex justify-content-between align-items-center gap-3 p-4 border-bottom">
-                <div>
-                    <h2 class="h5 mb-1">Employee Directory</h2>
-                    <p class="small text-secondary mb-0">Birthday age is calculated automatically.</p>
-                </div>
-                <span class="badge rounded-pill text-bg-light border">
-                    <?= count($employees); ?> <?= count($employees) === 1 ? 'employee' : 'employees'; ?>
-                </span>
-            </div>
-
-            <?php if (empty($employees)): ?>
-                <div class="empty-state text-center">
-                    <h3 class="h5">No employees yet</h3>
-                    <p class="text-secondary mb-3">Create the first employee record to begin.</p>
-                    <button type="button" class="btn btn-primary" data-action="add-employee">
-                        Add Employee
-                    </button>
-                </div>
-            <?php else: ?>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Birthday</th>
-                                <th scope="col">Age</th>
-                                <th scope="col">Address</th>
-                                <th scope="col">Contact No.</th>
-                                <th scope="col" class="text-end">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($employees as $employee): ?>
-                                <tr>
-                                    <td><?= (int) $employee['Id']; ?></td>
-                                    <td class="fw-semibold"><?= html_escape($employee['firstname']); ?></td>
-                                    <td><?= html_escape($employee['lastname']); ?></td>
-                                    <td><?= html_escape(date('M d, Y', strtotime($employee['birthday']))); ?></td>
-                                    <td><span class="badge text-bg-light border"><?= (int) $employee['age']; ?></span></td>
-                                    <td><?= html_escape($employee['address']); ?></td>
-                                    <td><?= html_escape($employee['contactno']); ?></td>
-                                    <td class="text-end">
-                                        <div class="btn-group btn-group-sm action-button-group" role="group" aria-label="Employee actions">
-                                            <button
-                                                type="button"
-                                                class="btn btn-outline-secondary"
-                                                data-action="info"
-                                                data-id="<?= (int) $employee['Id']; ?>"
-                                                data-firstname="<?= html_escape($employee['firstname']); ?>"
-                                                data-lastname="<?= html_escape($employee['lastname']); ?>"
-                                                data-birthday="<?= html_escape($employee['birthday']); ?>"
-                                                data-age="<?= (int) $employee['age']; ?>"
-                                                data-address="<?= html_escape($employee['address']); ?>"
-                                                data-contactno="<?= html_escape($employee['contactno']); ?>"
-                                            >
-                                                Info
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="btn btn-outline-primary"
-                                                data-action="edit"
-                                                data-id="<?= (int) $employee['Id']; ?>"
-                                                data-firstname="<?= html_escape($employee['firstname']); ?>"
-                                                data-lastname="<?= html_escape($employee['lastname']); ?>"
-                                                data-birthday="<?= html_escape($employee['birthday']); ?>"
-                                                data-address="<?= html_escape($employee['address']); ?>"
-                                                data-contactno="<?= html_escape($employee['contactno']); ?>"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                type="button"
-                                                class="btn btn-outline-danger"
-                                                data-action="delete"
-                                                data-id="<?= (int) $employee['Id']; ?>"
-                                                data-firstname="<?= html_escape($employee['firstname']); ?>"
-                                                data-lastname="<?= html_escape($employee['lastname']); ?>"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </section>
-    </main>
-
-    <?php $this->load->view('components/modals/employee.php'); ?>
-    <?php $this->load->view('components/modals/alert.php'); ?>
-    <?php $this->load->view('components/modals/logout.php'); ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?= html_escape(base_url('assets/js/app.js')); ?>"></script>
-    <script src="<?= html_escape(base_url('assets/js/employees.js')); ?>"></script>
+        <?php endif; ?>
+    </section>
+</main>
+<?php $this->load->view('components/modals/employee.php'); ?>
+<?php $this->load->view('components/modals/alert.php'); ?>
+<?php $this->load->view('components/modals/logout.php'); ?>
+<script src="<?= html_escape(base_url('assets/js/app.js')); ?>" defer></script>
+<script src="<?= html_escape(base_url('assets/js/employees.js')); ?>" defer></script>
 </body>
 </html>
