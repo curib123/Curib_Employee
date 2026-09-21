@@ -1,16 +1,24 @@
 # .htaccess | 2026-09-21
-# Apache rewrite and access rules for the Curib Employee application.
+# Apache routing and security headers for Curib Employee.
 
 Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Prevent direct access to application source and Composer packages.
-    RewriteRule ^(?:application|vendor)(?:/|$) - [F,L,NC]
+    # Prevent direct access to source, dependencies, database scripts, and tests.
+    RewriteRule ^(?:application|vendor|database|tests)(?:/|$) - [F,L,NC]
 
-    # Route non-file and non-directory requests through CodeIgniter.
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)$ index.php/$1 [L,QSA]
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'"
+    Header unset X-Powered-By
 </IfModule>
