@@ -1,7 +1,7 @@
 <?php
 /**
  * application/views/auth/registration_password.php | 2026-09-21
- * One-time generated password presentation after successful registration.
+ * One-time generated password presentation before returning to Login.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
@@ -18,8 +18,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <main class="auth-shell">
         <section class="text-center">
             <div class="brand-mark mx-auto mb-3">C</div>
-            <h1 class="h4">Preparing your account...</h1>
-            <p class="text-secondary mb-0">Save the one-time password shown in the secure modal.</p>
+            <h1 class="h4">Your account is ready.</h1>
+            <p class="text-secondary mb-0">
+                Copy the generated password, then sign in from the Login page with your email and that password.
+            </p>
         </section>
     </main>
 
