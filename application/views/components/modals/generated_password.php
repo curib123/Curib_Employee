@@ -41,7 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     type="button"
                     class="btn btn-primary w-100"
                     id="copyPasswordButton"
-                    data-login-url="<?= html_escape(site_url('login')); ?>"
+                    data-login-url="<?= html_escape(site_url('login') . '?email=' . rawurlencode($registration_email)); ?>"
                 >
                     Copy Password &amp; Go to Login
                 </button>
