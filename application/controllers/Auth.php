@@ -1,7 +1,7 @@
 <?php
 /**
  * application/controllers/Auth.php | 2026-09-21
- * Registration, generated-password login, logout, and session authentication.
+ * Registration, generated-password login, first-login password prompt, logout, and sessions.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -79,7 +79,11 @@ class Auth extends CI_Controller
         $this->clear_login_attempts();
         $this->start_authenticated_session($user);
 
-        $this->set_flash('success', 'Welcome back, ' . $user['firstname'] . '.');
+        if ((int) $user['must_change_password'] !== 1)
+        {
+            $this->set_flash('success', 'Welcome back, ' . $user['firstname'] . '.');
+        }
+
         redirect('dashboard');
     }
 
@@ -124,45 +128,43 @@ class Auth extends CI_Controller
 
         $plain_password = $this->generate_password(14);
         $payload['password'] = password_hash($plain_password, PASSWORD_DEFAULT);
+        $payload['must_change_password'] = 1;
 
         if (!$this->User_model->insert($payload))
         {
-            unset($payload['password']);
+            unset($payload['password'], $payload['must_change_password']);
             $this->session->set_flashdata('old_input', $payload);
             $this->set_flash('danger', 'Registration could not be completed. Please try again.');
             redirect('register');
             return;
         }
 
-        $user = $this->User_model->find_by_email($payload['email']);
-
-        if (!$user)
-        {
-            $this->set_flash('danger', 'Your account was created, but sign-in could not be completed.');
-            redirect('login');
-            return;
-        }
-
-        $this->start_authenticated_session($user);
         $this->session->set_flashdata('generated_password', $plain_password);
+        $this->session->set_flashdata('registration_email', $payload['email']);
 
         redirect('registration-password');
     }
 
     public function registration_password()
     {
-        if (!$this->session->userdata('logged_in'))
+        if ($this->session->userdata('logged_in'))
+        {
+            redirect('dashboard');
+            return;
+        }
+
+        $generated_password = $this->session->flashdata('generated_password');
+        $registration_email = $this->session->flashdata('registration_email');
+
+        if (!$generated_password)
         {
             redirect('login');
             return;
         }
 
-        $generated_password = $this->session->flashdata('generated_password');
-
-        if (!$generated_password)
+        if ($registration_email)
         {
-            redirect('dashboard');
-            return;
+            $this->session->set_flashdata('old_email', $registration_email);
         }
 
         $this->output
@@ -171,15 +173,101 @@ class Auth extends CI_Controller
             ->set_header('Expires: 0');
 
         $data = array(
-            'generated_password' => $generated_password,
-            'current_user' => array(
-                'firstname' => (string) $this->session->userdata('user_firstname'),
-                'lastname' => (string) $this->session->userdata('user_lastname'),
-                'email' => (string) $this->session->userdata('user_email')
-            )
+            'generated_password' => $generated_password
         );
 
         $this->load->view('auth/registration_password.php', $data);
+    }
+
+    public function change_password()
+    {
+        $this->require_post();
+        $this->require_authenticated_user();
+
+        if (!$this->session->userdata('user_password_prompt_pending'))
+        {
+            redirect('dashboard');
+            return;
+        }
+
+        $this->form_validation->set_rules(
+            'new_password',
+            'New password',
+            'required|min_length[12]|max_length[72]|callback_strong_password'
+        );
+        $this->form_validation->set_rules(
+            'confirm_password',
+            'Confirm password',
+            'required|matches[new_password]'
+        );
+
+        if ($this->form_validation->run() === FALSE)
+        {
+            $this->session->set_flashdata(
+                'password_validation_errors',
+                $this->form_validation->error_array()
+            );
+            redirect('dashboard');
+            return;
+        }
+
+        $user_id = (int) $this->session->userdata('user_id');
+        $user = $this->User_model->find_by_id($user_id);
+        $new_password = (string) $this->input->post('new_password', FALSE);
+
+        if (!$user)
+        {
+            $this->session->sess_destroy();
+            redirect('login');
+            return;
+        }
+
+        if (password_verify($new_password, $user['password']))
+        {
+            $this->session->set_flashdata(
+                'password_validation_errors',
+                array('new_password' => 'Your new password must be different from your generated password.')
+            );
+            redirect('dashboard');
+            return;
+        }
+
+        $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+
+        if ($this->User_model->update_password_and_clear_prompt($user_id, $password_hash))
+        {
+            $this->session->set_userdata('user_password_prompt_pending', FALSE);
+            $this->set_flash('success', 'Your password was changed successfully.');
+        }
+        else
+        {
+            $this->set_flash('danger', 'Your password could not be changed. Please try again.');
+        }
+
+        redirect('dashboard');
+    }
+
+    public function skip_password_change()
+    {
+        $this->require_post();
+        $this->require_authenticated_user();
+
+        $user_id = (int) $this->session->userdata('user_id');
+
+        if ($this->User_model->clear_password_prompt($user_id))
+        {
+            $this->session->set_userdata('user_password_prompt_pending', FALSE);
+            $this->set_flash(
+                'info',
+                'Password change skipped. The first-login prompt will not appear again.'
+            );
+        }
+        else
+        {
+            $this->set_flash('danger', 'The password prompt could not be dismissed. Please try again.');
+        }
+
+        redirect('dashboard');
     }
 
     public function logout()
@@ -239,6 +327,27 @@ class Auth extends CI_Controller
         if ($this->User_model->email_exists($email))
         {
             $this->form_validation->set_message('unique_email', 'That email address is already registered.');
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    public function strong_password($password)
+    {
+        $password = (string) $password;
+
+        if (
+            !preg_match('/[A-Z]/', $password) ||
+            !preg_match('/[a-z]/', $password) ||
+            !preg_match('/[0-9]/', $password) ||
+            !preg_match('/[^A-Za-z0-9]/', $password)
+        )
+        {
+            $this->form_validation->set_message(
+                'strong_password',
+                'The {field} field must contain uppercase, lowercase, number, and symbol characters.'
+            );
             return FALSE;
         }
 
@@ -309,7 +418,8 @@ class Auth extends CI_Controller
             'user_id' => (int) $user['Id'],
             'user_firstname' => $user['firstname'],
             'user_lastname' => $user['lastname'],
-            'user_email' => $user['email']
+            'user_email' => $user['email'],
+            'user_password_prompt_pending' => ((int) $user['must_change_password'] === 1)
         ));
     }
 
@@ -336,6 +446,15 @@ class Auth extends CI_Controller
             'type' => $type,
             'message' => $message
         ));
+    }
+
+    private function require_authenticated_user()
+    {
+        if (!$this->session->userdata('logged_in'))
+        {
+            redirect('login');
+            exit;
+        }
     }
 
     private function require_post()
