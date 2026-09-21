@@ -23,9 +23,16 @@ class Auth extends CI_Controller
             return;
         }
 
+        $prefill_email = $this->session->flashdata('old_email');
+
+        if (!$prefill_email)
+        {
+            $prefill_email = strtolower(trim((string) $this->input->get('email', TRUE)));
+        }
+
         $data = array(
             'flash' => $this->session->flashdata('flash'),
-            'old_email' => $this->session->flashdata('old_email') ?: ''
+            'old_email' => $prefill_email ?: ''
         );
 
         $this->load->view('auth/login.php', $data);
@@ -139,44 +146,20 @@ class Auth extends CI_Controller
             return;
         }
 
-        $this->session->set_flashdata('generated_password', $plain_password);
-        $this->session->set_flashdata('registration_email', $payload['email']);
-
-        redirect('registration-password');
-    }
-
-    public function registration_password()
-    {
-        if ($this->session->userdata('logged_in'))
-        {
-            redirect('dashboard');
-            return;
-        }
-
-        $generated_password = $this->session->flashdata('generated_password');
-        $registration_email = $this->session->flashdata('registration_email');
-
-        if (!$generated_password)
-        {
-            redirect('login');
-            return;
-        }
-
-        if ($registration_email)
-        {
-            $this->session->set_flashdata('old_email', $registration_email);
-        }
-
+        /*
+         * Do not place the generated plaintext password in session flashdata.
+         * Sessions are database-backed, so doing that would temporarily store
+         * the plaintext password in ci_sessions. Render it directly instead.
+         */
         $this->output
             ->set_header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0')
             ->set_header('Pragma: no-cache')
             ->set_header('Expires: 0');
 
-        $data = array(
-            'generated_password' => $generated_password
-        );
-
-        $this->load->view('auth/registration_password.php', $data);
+        $this->load->view('auth/registration_password.php', array(
+            'generated_password' => $plain_password,
+            'registration_email' => $payload['email']
+        ));
     }
 
     public function change_password()
