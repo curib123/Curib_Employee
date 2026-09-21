@@ -19,32 +19,40 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
     <title>Register | Curib Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body>
-    <main class="min-vh-100 d-flex align-items-center bg-body-tertiary py-5">
-        <section class="container bg-white border rounded-4 shadow-sm overflow-hidden p-0">
+<body class="bg-body-tertiary">
+    <main class="min-vh-100 d-flex align-items-center py-4 py-lg-5">
+        <div class="container">
+            <section class="row justify-content-center">
+                <div class="col-12 col-xl-10">
+                    <div class="card border-0 shadow-lg overflow-hidden rounded-4">
             <div class="row g-0">
                 <div class="col-lg-4">
                     <div class="h-100 p-4 p-lg-5 d-flex flex-column justify-content-between bg-primary text-white">
                         <div>
-                            <div class="badge text-bg-dark fs-4 p-2 mb-4">C</div>
+                            <div class="d-inline-flex align-items-center gap-2 mb-4">
+                                <span class="badge text-bg-light text-primary fs-5 p-2">C</span>
+                                <span class="fw-semibold">Curib Employee</span>
+                            </div>
                             <h1 class="h2 fw-bold">Create your account</h1>
                             <p class="opacity-75 mb-0">
                                 Complete your profile. A strong password will be generated securely after registration.
                             </p>
                         </div>
-                        <p class="small opacity-75 mt-5 mb-0">Your generated password is shown only once.</p>
+                        <div class="mt-5 pt-4 border-top border-light border-opacity-25">
+                            <p class="small opacity-75 mb-0">Your generated password is shown only once after successful registration.</p>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-8">
-                    <div class="p-4 p-lg-5">
+                    <div class="p-4 p-md-5">
                         <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mb-4">
                             <div>
-                                <p class="text-uppercase small fw-semibold text-primary mb-2">Registration</p>
-                                <h2 class="h3 mb-1">Your information</h2>
-                                <p class="text-secondary mb-0">All fields are required.</p>
+                                <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis mb-3">Registration</span>
+                                <h2 class="h2 fw-bold mb-2">Your information</h2>
+                                <p class="text-secondary mb-0">Complete all required fields to create your account.</p>
                             </div>
-                            <a href="<?= html_escape(site_url('login')); ?>" class="btn btn-light align-self-sm-start">
+                            <a href="<?= html_escape(site_url('login')); ?>" class="btn btn-outline-secondary align-self-sm-start">
                                 Back to Login
                             </a>
                         </div>
@@ -55,7 +63,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                     <label for="firstname" class="form-label">First Name</label>
                                     <input
                                         type="text"
-                                        class="form-control"
+                                        class="form-control form-control-lg"
                                         id="firstname"
                                         name="firstname"
                                         maxlength="100"
@@ -70,7 +78,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                     <label for="lastname" class="form-label">Last Name</label>
                                     <input
                                         type="text"
-                                        class="form-control"
+                                        class="form-control form-control-lg"
                                         id="lastname"
                                         name="lastname"
                                         maxlength="100"
@@ -85,7 +93,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                     <label for="birthday" class="form-label">Birthday</label>
                                     <input
                                         type="date"
-                                        class="form-control"
+                                        class="form-control form-control-lg"
                                         id="birthday"
                                         name="birthday"
                                         min="1900-01-01"
@@ -100,7 +108,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                     <label for="contactno" class="form-label">Contact No.</label>
                                     <input
                                         type="tel"
-                                        class="form-control"
+                                        class="form-control form-control-lg"
                                         id="contactno"
                                         name="contactno"
                                         maxlength="20"
@@ -116,7 +124,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <div class="col-12">
                                     <label for="address" class="form-label">Address</label>
                                     <textarea
-                                        class="form-control"
+                                        class="form-control form-control-lg"
                                         id="address"
                                         name="address"
                                         rows="3"
@@ -131,7 +139,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                     <label for="email" class="form-label">Email Address</label>
                                     <input
                                         type="email"
-                                        class="form-control"
+                                        class="form-control form-control-lg"
                                         id="email"
                                         name="email"
                                         maxlength="190"
@@ -143,13 +151,16 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="alert alert-info mb-0" role="alert">
-                                        You do not choose a password here. A strong password is generated after successful registration.
+                                    <div class="alert alert-primary d-flex align-items-start gap-3 mb-0" role="alert">
+                                        <div>
+                                            <div class="fw-semibold mb-1">Password is generated for you</div>
+                                            <div class="small">A strong password will be shown once after successful registration. Save it before continuing.</div>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary w-100 py-2">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">
                                         Register &amp; Generate Password
                                     </button>
                                 </div>
@@ -158,7 +169,10 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                     </div>
                 </div>
             </div>
-        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
     <?php $this->load->view('components/modals/alert.php'); ?>
