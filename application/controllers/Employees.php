@@ -1,7 +1,7 @@
 <?php
 /**
  * application/controllers/Employees.php | 2026-09-21
- * Protected Employee CRUD controller with validation and age calculation.
+ * Protected Employee CRUD controller with strict server-side validation and age calculation.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -52,10 +52,14 @@ class Employees extends MY_Controller
             return;
         }
 
-        $this->set_flash(
-            $this->Employee_model->insert($payload) ? 'success' : 'danger',
-            $this->db->affected_rows() > 0 ? 'Employee added successfully.' : 'The employee could not be added.'
-        );
+        if ($this->Employee_model->insert($payload))
+        {
+            $this->set_flash('success', 'Employee added successfully.');
+        }
+        else
+        {
+            $this->set_flash('danger', 'The employee could not be added. Please try again.');
+        }
 
         redirect('employees');
     }
@@ -66,7 +70,7 @@ class Employees extends MY_Controller
 
         $id = (int) $id;
 
-        if (!$this->Employee_model->find($id))
+        if ($id < 1 || !$this->Employee_model->find($id))
         {
             $this->set_flash('danger', 'Employee not found.');
             redirect('employees');
@@ -89,7 +93,7 @@ class Employees extends MY_Controller
         }
         else
         {
-            $this->set_flash('danger', 'The employee could not be updated.');
+            $this->set_flash('danger', 'The employee could not be updated. Please try again.');
         }
 
         redirect('employees');
@@ -101,7 +105,7 @@ class Employees extends MY_Controller
 
         $id = (int) $id;
 
-        if (!$this->Employee_model->find($id))
+        if ($id < 1 || !$this->Employee_model->find($id))
         {
             $this->set_flash('danger', 'Employee not found.');
             redirect('employees');
@@ -114,10 +118,26 @@ class Employees extends MY_Controller
         }
         else
         {
-            $this->set_flash('danger', 'The employee could not be deleted.');
+            $this->set_flash('danger', 'The employee could not be deleted. Please try again.');
         }
 
         redirect('employees');
+    }
+
+    public function valid_name($name)
+    {
+        $name = trim((string) $name);
+
+        if (!preg_match("/^[\p{L}\p{M}][\p{L}\p{M} .'-]{0,99}$/u", $name))
+        {
+            $this->form_validation->set_message(
+                'valid_name',
+                'The {field} field may contain letters, spaces, apostrophes, periods, and hyphens only.'
+            );
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     public function valid_birthday($birthday)
@@ -143,7 +163,10 @@ class Employees extends MY_Controller
 
         if ($date < $minimum)
         {
-            $this->form_validation->set_message('valid_birthday', 'The {field} field must be on or after January 1, 1900.');
+            $this->form_validation->set_message(
+                'valid_birthday',
+                'The {field} field must be on or after January 1, 1900.'
+            );
             return FALSE;
         }
 
@@ -152,11 +175,24 @@ class Employees extends MY_Controller
 
     public function valid_contactno($contactno)
     {
-        if (!preg_match('/^[0-9+()\-\s]{7,20}$/', (string) $contactno))
+        $contactno = trim((string) $contactno);
+
+        if (!preg_match('/^[0-9+()\-\s]{7,20}$/', $contactno))
         {
             $this->form_validation->set_message(
                 'valid_contactno',
-                'The {field} field must contain 7 to 20 valid phone characters.'
+                'The {field} field contains unsupported characters.'
+            );
+            return FALSE;
+        }
+
+        $digit_count = strlen(preg_replace('/\D+/', '', $contactno));
+
+        if ($digit_count < 7 || $digit_count > 15)
+        {
+            $this->form_validation->set_message(
+                'valid_contactno',
+                'The {field} field must contain between 7 and 15 digits.'
             );
             return FALSE;
         }
@@ -166,10 +202,26 @@ class Employees extends MY_Controller
 
     private function set_validation_rules()
     {
-        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required|callback_valid_birthday');
-        $this->form_validation->set_rules('address', 'Address', 'trim|required|max_length[255]');
+        $this->form_validation->set_rules(
+            'firstname',
+            'First name',
+            'trim|required|max_length[100]|callback_valid_name'
+        );
+        $this->form_validation->set_rules(
+            'lastname',
+            'Last name',
+            'trim|required|max_length[100]|callback_valid_name'
+        );
+        $this->form_validation->set_rules(
+            'birthday',
+            'Birthday',
+            'trim|required|callback_valid_birthday'
+        );
+        $this->form_validation->set_rules(
+            'address',
+            'Address',
+            'trim|required|min_length[5]|max_length[255]'
+        );
         $this->form_validation->set_rules(
             'contactno',
             'Contact number',
