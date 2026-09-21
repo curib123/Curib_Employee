@@ -1,0 +1,10 @@
+# application/.htaccess | 2026-09-21
+# Block direct web access to application source files.
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    Deny from all
+</IfModule>
