@@ -41,7 +41,7 @@ $config['sess_regenerate_destroy'] = TRUE;
 $config['cookie_prefix'] = '';
 $config['cookie_domain'] = '';
 $config['cookie_path'] = '/';
-$config['cookie_secure'] = (bool) getenv('COOKIE_SECURE');
+$config['cookie_secure'] = filter_var(getenv('COOKIE_SECURE') ?: '0', FILTER_VALIDATE_BOOLEAN);
 $config['cookie_httponly'] = TRUE;
 $config['cookie_samesite'] = 'Lax';
 
