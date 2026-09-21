@@ -1,12 +1,18 @@
 <?php
 /**
  * application/views/dashboard/index.php | 2026-09-21
- * Modern authenticated dashboard with top navigation only.
+ * Modern authenticated dashboard with top navigation and one-time password prompt.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 $active_nav = 'dashboard';
-$validation_errors = array();
+$validation_errors = isset($validation_errors) && is_array($validation_errors)
+    ? $validation_errors
+    : array();
+$show_first_login_password_prompt = !empty($show_first_login_password_prompt);
+$reopen_modal = !empty($validation_errors) && $show_first_login_password_prompt
+    ? 'firstLoginPasswordModal'
+    : '';
 ?>
 <!doctype html>
 <html lang="en">
@@ -70,6 +76,7 @@ $validation_errors = array();
         </div>
     </main>
 
+    <?php $this->load->view('components/modals/change_password.php'); ?>
     <?php $this->load->view('components/modals/alert.php'); ?>
     <?php $this->load->view('components/modals/logout.php'); ?>
 
