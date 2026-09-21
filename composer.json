@@ -1,0 +1,13 @@
+{
+  "_comment": "composer.json | 2026-09-21",
+  "name": "curib123/curib-employee",
+  "description": "CodeIgniter 3 MVC employee CRUD using Bootstrap 5 and MySQL.",
+  "type": "project",
+  "require": {
+    "php": ">=7.4",
+    "codeigniter/framework": "3.1.13"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
