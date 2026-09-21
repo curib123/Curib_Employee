@@ -10,7 +10,12 @@ $validation_errors = isset($validation_errors) && is_array($validation_errors)
     ? $validation_errors
     : array();
 $show_first_login_password_prompt = !empty($show_first_login_password_prompt);
-$reopen_modal = !empty($validation_errors) && $show_first_login_password_prompt
+$prompt_action_failed = !empty($flash)
+    && isset($flash['type'])
+    && in_array($flash['type'], array('danger', 'warning'), TRUE);
+
+$reopen_modal = $show_first_login_password_prompt
+    && (!empty($validation_errors) || $prompt_action_failed)
     ? 'firstLoginPasswordModal'
     : '';
 ?>
