@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     data-bs-keyboard="false"
 >
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg password-modal">
+        <div class="modal-content border-0 shadow-lg overflow-hidden">
             <div class="modal-header border-0 pb-0">
                 <div>
                     <span class="badge rounded-pill text-bg-success mb-2">Registration complete</span>
@@ -29,7 +29,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     Copy this password now. You will use it with your email on the Login page.
                 </p>
 
-                <div class="generated-password-box" id="generatedPasswordValue">
+                <div class="border rounded-3 bg-body-tertiary p-3 text-center fw-bold font-monospace text-break" id="generatedPasswordValue">
                     <?= html_escape($generated_password); ?>
                 </div>
 
