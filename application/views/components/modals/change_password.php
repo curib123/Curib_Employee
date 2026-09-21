@@ -22,7 +22,7 @@ $has_password_errors = !empty($validation_errors);
     data-bs-keyboard="false"
 >
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <?= form_open(
                 'password/change',
                 array(
@@ -31,7 +31,7 @@ $has_password_errors = !empty($validation_errors);
                     'novalidate' => 'novalidate'
                 )
             ); ?>
-                <div class="modal-header border-0 pb-0">
+                <div class="modal-header border-0 bg-body-tertiary px-4 pt-4 pb-3">
                     <div>
                         <span class="badge rounded-pill text-bg-primary mb-2">First login</span>
                         <h2 class="modal-title fs-4" id="firstLoginPasswordModalLabel">
@@ -40,17 +40,17 @@ $has_password_errors = !empty($validation_errors);
                     </div>
                 </div>
 
-                <div class="modal-body">
-                    <p class="text-secondary">
-                        You can replace the generated password now, or skip this once and continue using it.
-                        This prompt will not appear again after either choice.
-                    </p>
+                <div class="modal-body p-4">
+                    <div class="alert alert-primary border-0 mb-4" role="alert">
+                        <div class="fw-semibold mb-1">Secure your account</div>
+                        <div class="small">Replace the generated password now, or skip once and continue using it. This prompt will not appear again after either choice.</div>
+                    </div>
 
                     <div class="mb-3">
                         <label for="new_password" class="form-label">New Password</label>
                         <input
                             type="password"
-                            class="form-control"
+                            class="form-control form-control-lg"
                             id="new_password"
                             name="new_password"
                             minlength="12"
@@ -68,7 +68,7 @@ $has_password_errors = !empty($validation_errors);
                         <label for="confirm_password" class="form-label">Confirm New Password</label>
                         <input
                             type="password"
-                            class="form-control"
+                            class="form-control form-control-lg"
                             id="confirm_password"
                             name="confirm_password"
                             minlength="12"
@@ -80,15 +80,15 @@ $has_password_errors = !empty($validation_errors);
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 pt-0">
+                <div class="modal-footer border-0 bg-body-tertiary p-4 pt-3">
                     <button
                         type="submit"
-                        class="btn btn-light"
+                        class="btn btn-outline-secondary px-4"
                         form="skipPasswordForm"
                     >
                         Skip
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary px-4">
                         Change Password
                     </button>
                 </div>
