@@ -1,7 +1,7 @@
 <?php
 /**
- * application/views/components/modals/generated_password.php | 2026-09-21
- * One-time generated-password modal shown immediately after registration.
+ * application/views/components/modals/generated_password.php | 2026-09-22
+ * One-time Bootstrap generated-password modal shown immediately after registration.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
@@ -23,6 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <h1 class="modal-title fs-4" id="generatedPasswordModalLabel">Save your generated password</h1>
                 </div>
             </div>
+
             <div class="modal-body">
                 <p class="text-secondary">
                     Copy this password now. You will use it with your email on the Login page.
@@ -36,12 +37,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     This password is shown only once. Only its secure hash is stored in the database.
                 </div>
             </div>
+
             <div class="modal-footer border-0 pt-0">
                 <button
                     type="button"
                     class="btn btn-primary w-100"
                     id="copyPasswordButton"
-                    data-login-url="<?= html_escape(site_url('login') . '?email=' . rawurlencode($registration_email)); ?>"
+                    data-login-url="<?= html_escape(site_url('login')); ?>"
                 >
                     Copy Password &amp; Go to Login
                 </button>
