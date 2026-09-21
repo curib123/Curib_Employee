@@ -18,16 +18,15 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register | Curib Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="<?= html_escape(base_url('assets/css/app.css')); ?>" rel="stylesheet">
 </head>
 <body>
-    <main class="auth-shell">
-        <section class="auth-card">
+    <main class="min-vh-100 d-flex align-items-center bg-body-tertiary py-5">
+        <section class="container bg-white border rounded-4 shadow-sm overflow-hidden p-0">
             <div class="row g-0">
                 <div class="col-lg-4">
-                    <div class="auth-side h-100 p-4 p-lg-5 d-flex flex-column justify-content-between">
+                    <div class="h-100 p-4 p-lg-5 d-flex flex-column justify-content-between bg-primary text-white">
                         <div>
-                            <div class="brand-mark mb-4">C</div>
+                            <div class="badge text-bg-dark fs-4 p-2 mb-4">C</div>
                             <h1 class="h2 fw-bold">Create your account</h1>
                             <p class="opacity-75 mb-0">
                                 Complete your profile. A strong password will be generated securely after registration.
