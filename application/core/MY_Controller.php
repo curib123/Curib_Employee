@@ -9,6 +9,7 @@ class MY_Controller extends CI_Controller
 {
     protected $current_user = array();
 
+
     public function __construct()
     {
         parent::__construct();

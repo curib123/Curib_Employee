@@ -42,10 +42,11 @@ class User_model extends CI_Model
             ->result_array();
     }
 
-    public function get_management_users()
+    public function get_management_users($current_user_id = 0)
     {
         return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at')
             ->from($this->table)
+            ->order_by('CASE WHEN Id = ' . (int) $current_user_id . ' THEN 0 ELSE 1 END', '', FALSE)
             ->order_by('lastname', 'ASC')
             ->order_by('firstname', 'ASC')
             ->get()

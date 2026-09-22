@@ -12,7 +12,7 @@
     <div class="row g-4">
         <div class="col-lg-7">
             <section class="card border-0 shadow-sm rounded-4"><div class="card-body p-4">
-                <h1 class="h3 mb-1">Account information</h1><p class="text-secondary mb-4">Keep your contact details current.</p>
+                <h1 class="h3 mb-1">My Profile</h1><p class="text-secondary mb-4">Keep your contact details current.</p>
                 <?= form_open('account/profile', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label" for="firstname">First name</label><input class="form-control" id="firstname" name="firstname" maxlength="100" value="<?= html_escape($current_user['firstname']); ?>" required></div>

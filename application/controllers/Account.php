@@ -20,6 +20,7 @@ class Account extends MY_Controller
         $this->load->view('account/index.php', $data);
     }
 
+    // This method handles the profile update form submission.
     public function update_profile()
     {
         $this->require_post();
@@ -54,6 +55,7 @@ class Account extends MY_Controller
         redirect('account');
     }
 
+    // This method handles the password change form submission.
     public function change_password()
     {
         $this->require_post();
@@ -101,6 +103,7 @@ class Account extends MY_Controller
         redirect('account');
     }
 
+    // This method handles the profile picture upload form submission.
     public function upload_picture()
     {
         $this->require_post();
@@ -153,6 +156,8 @@ class Account extends MY_Controller
         redirect('account');
     }
 
+   
+    // This method validates names to ensure they contain only allowed characters.
     public function valid_name($name)
     {
         if (!preg_match("/^[\\p{L}\\p{M}][\\p{L}\\p{M} .'-]{0,99}$/u", trim((string) $name)))
@@ -163,6 +168,7 @@ class Account extends MY_Controller
         return TRUE;
     }
 
+    // This method validates birthdays to ensure they are valid dates not in the future.
     public function valid_birthday($birthday)
     {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', trim((string) $birthday));
@@ -175,6 +181,7 @@ class Account extends MY_Controller
         return TRUE;
     }
 
+    // This method validates passwords to ensure they meet strength requirements.
     public function strong_password($password)
     {
         if (preg_match('/\\s/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[^A-Za-z0-9]/', $password))
@@ -185,6 +192,7 @@ class Account extends MY_Controller
         return TRUE;
     }
 
+    // This method sets the validation rules for profile updates.
     private function set_profile_rules()
     {
         $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]|callback_valid_name');
@@ -194,6 +202,7 @@ class Account extends MY_Controller
         $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]');
     }
 
+     // This method refreshes the session data with the updated user information.
     private function refresh_session($user)
     {
         $age = (new DateTimeImmutable($user['birthday']))->diff(new DateTimeImmutable('today'))->y;

@@ -24,6 +24,7 @@ class Auth extends CI_Controller
             ->set_header('Pragma: no-cache');
     }
 
+    // This method displays the login form to the user.
     public function login()
     {
         if ($this->session->userdata('logged_in'))
@@ -40,6 +41,7 @@ class Auth extends CI_Controller
         $this->load->view('auth/login.php', $data);
     }
 
+    // This method processes the login form submission, handling validation, authentication, and session management.
     public function login_submit()
     {
         $this->require_post();
@@ -136,6 +138,7 @@ class Auth extends CI_Controller
         redirect('dashboard');
     }
 
+    // This method processes the logout request, destroying the session and redirecting to the login page.
     public function register()
     {
         if ($this->session->userdata('logged_in'))
@@ -154,6 +157,7 @@ class Auth extends CI_Controller
         $this->load->view('auth/register.php', $data);
     }
 
+    // This method handles the registration form submission, including validation, profile picture upload, password generation, and user creation.
     public function register_submit()
     {
         $this->require_post();
@@ -230,6 +234,8 @@ class Auth extends CI_Controller
         ));
     }
 
+   
+   
     public function change_password()
     {
         $this->require_post();
@@ -319,6 +325,8 @@ class Auth extends CI_Controller
         redirect('dashboard');
     }
 
+
+    // This method allows users to skip the first-login password change prompt, clearing the prompt state in the database and session.
     public function skip_password_change()
     {
         $this->require_post();
@@ -348,6 +356,7 @@ class Auth extends CI_Controller
         redirect('dashboard');
     }
 
+    // This method processes the logout request, destroying the session and redirecting to the login page.
     public function logout()
     {
         $this->require_post();

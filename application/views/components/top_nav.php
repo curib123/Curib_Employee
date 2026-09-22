@@ -63,6 +63,7 @@ $full_name = trim($first_name . ' ' . $last_name);
 
             <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3 mt-3 mt-lg-0">
                 <div class="text-lg-end">
+                    <div class="small text-primary fw-semibold">Current user</div>
                     <div class="small fw-semibold"><?= html_escape($full_name); ?></div>
                     <div class="small text-secondary"><?= html_escape($current_user['email']); ?></div>
                 </div>

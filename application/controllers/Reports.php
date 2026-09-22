@@ -12,8 +12,7 @@ class Reports extends MY_Controller
 
     public function index()
     {
-        $start = $this->date_input('start_date', date('Y-m-01'));
-        $end = $this->date_input('end_date', date('Y-m-d'));
+        list($start, $end) = $this->date_range();
         $end_exclusive = date('Y-m-d 00:00:00', strtotime($end . ' +1 day'));
         $data = array(
             'current_user' => $this->current_user,
@@ -31,8 +30,7 @@ class Reports extends MY_Controller
     {
         $report = (string) $this->input->get('report', TRUE);
         $format = strtolower((string) $this->input->get('format', TRUE));
-        $start = $this->date_input('start_date', date('Y-m-01'));
-        $end = $this->date_input('end_date', date('Y-m-d'));
+        list($start, $end) = $this->date_range();
         $end_exclusive = date('Y-m-d 00:00:00', strtotime($end . ' +1 day'));
         $reports = array(
             'registrations' => array('title' => 'Registration Report', 'headers' => array('ID', 'First name', 'Last name', 'Email', 'Birthday', 'Address', 'Contact', 'Registered at'), 'rows' => $this->registration_rows($start, $end_exclusive)),
@@ -46,7 +44,7 @@ class Reports extends MY_Controller
             return;
         }
         $report_data = $reports[$report];
-        $format = in_array($format, array('csv', 'xls', 'pdf','docx'), TRUE) ? $format : 'csv';
+        $format = in_array($format, array('csv', 'xls', 'pdf'), TRUE) ? $format : 'csv';
         $filename = strtolower(str_replace(' ', '-', $report_data['title'])) . '-' . date('Ymd') . '.' . $format;
         if ($format === 'csv')
         {
@@ -55,10 +53,6 @@ class Reports extends MY_Controller
         elseif ($format === 'xls')
         {
             $this->download_xls($filename, $report_data);
-        }
-        elseif ($format === 'docx')
-        {
-            $this->download_docx($filename, $report_data);
         }
         else
         {
@@ -139,7 +133,7 @@ class Reports extends MY_Controller
         {
             if ($index > 0) { $stream .= "0 -14 Td\n"; }
             $text = substr(str_replace(array('\\', '(', ')'), array('\\\\', '\\(', '\\)'), preg_replace('/[^ -~]/', '', (string) $line)), 0, 115);
-            $stream .= '(' . $text . ') Tj\n';
+            $stream .= '(' . $text . ") Tj\n";
         }
         $stream .= "ET";
         $objects = array('', '<< /Type /Catalog /Pages 2 0 R >>', '<< /Type /Pages /Kids [3 0 R] /Count 1 >>', '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>', '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . "\nendstream", '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
@@ -156,5 +150,20 @@ class Reports extends MY_Controller
         $value = trim((string) $this->input->get($key, TRUE));
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', $value);
         return $date && DateTimeImmutable::getLastErrors() === FALSE ? $date->format('Y-m-d') : $fallback;
+    }
+
+    private function date_range()
+    {
+        $default_start = date('Y-m-01');
+        $default_end = date('Y-m-d');
+        $start = $this->date_input('start_date', $default_start);
+        $end = $this->date_input('end_date', $default_end);
+
+        if ($start > $end)
+        {
+            $end = $start;
+        }
+
+        return array($start, $end);
     }
 }

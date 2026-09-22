@@ -1,23 +1,41 @@
 .auth-page {
   position: relative;
-  background-image: url('../images/bg.jpg');
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-color: #1a1b1c;
+  overflow: hidden;
 }
 
 .auth-page::before {
   content: "";
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.70);
+  inset: -18px;
+  background: url('../images/bg.jpg') center / cover no-repeat;
+  filter: blur(12px);
   pointer-events: none;
   z-index: 0;
 }
 
-.auth-page > * {
+.auth-page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(30, 31, 32, 0.88), rgba(41, 43, 44, 0.72));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-page > main {
   position: relative;
   z-index: 1;
+}
+
+.auth-page > .modal {
+  position: fixed;
+  z-index: 1055;
+}
+
+.auth-page > .modal-backdrop {
+  position: fixed;
+  z-index: 1050;
 }
 
 .auth-page .card {

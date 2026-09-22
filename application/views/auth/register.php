@@ -54,7 +54,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <p class="text-secondary mb-0">Complete all required fields to create your account.</p>
                             </div>
                             <a href="<?= html_escape(site_url('login')); ?>" class="btn btn-outline-secondary align-self-sm-start">
-                               < Back to Login
+                               Back to Login
                             </a>
                         </div>
 
@@ -157,7 +157,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <div class="col-12">
                                     <label for="profile_picture" class="form-label">Profile picture <span class="text-secondary">(optional)</span></label>
                                     <input type="file" class="form-control form-control-lg" id="profile_picture" name="profile_picture" accept=".jpg,.jpeg,.png,.webp">
-                                    <div class="form-text">JPG, PNG, or WebP; maximum 2 MB and 2000 x 2000 pixels.</div>
+                                    <div class="form-text m-2 text-muted">JPG, PNG, or WebP only others is not supported; maximum 2 MB and 2000 x 2000 pixels.</div>
                                 </div>
 
                                 <div class="col-12">

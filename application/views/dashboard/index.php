@@ -39,27 +39,24 @@ $reopen_modal = $show_first_login_password_prompt
                     <h1 class="display-5 fw-bold mb-2 text-light">
                         Hello, <?= html_escape($current_user['lastname']); ?>.
                     </h1>
-                    <p class="lead text-light mb-0">
-                        Your employee workspace is ready. Manage records and Ready to go.
-                    </p>
+                    <p class="lead text-light mb-0">Monitor users, employees, and registration activity.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
                     <a href="<?= html_escape(site_url('employees')); ?>" class="btn btn-light btn-lg rounded-3 px-3 m-1">
                         Manage Employees
                     </a>
-            
+                    <a href="<?= html_escape(site_url('reports')); ?>" class="btn btn-outline-light btn-lg rounded-3 px-3 m-1">View Reports</a>
                 </div>
             </div>
             </div>
         </section>
 
         <div class="row g-4 mt-4">
-            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold mb-2"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All user accounts.</p></div></section></div>
-            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New users today</p><div class="display-5 fw-bold mb-2"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">Accounts created today.</p></div></section></div>
-            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New users this month</p><div class="display-5 fw-bold mb-2"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">Accounts created this month.</p></div></section></div>
-            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Age statistics</p><div class="h5 mb-2">Average: <?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Youngest <?= (int) $age_statistics['youngest_age']; ?>, oldest <?= (int) $age_statistics['oldest_age']; ?>.</p></div></section></div>
-            <div class="col-12"><section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4"><h2 class="h5 mb-3">Users by age range</h2><div class="row g-3"><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">Under 18</div><div class="h4 mb-0"><?= (int) $age_breakdown['under_18']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">18-30</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_18_30']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">31-40</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_31_40']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">41-50</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_41_50']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">51+</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_51_plus']; ?></div></div></div></div></div></section></div>
-            <div class="col-12"><section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4"><h2 class="h5 mb-3">Top user addresses</h2><div class="table-responsive"><table class="table mb-0"><thead><tr><th>Address</th><th class="text-end">Users</th></tr></thead><tbody><?php foreach ($address_statistics as $address): ?><tr><td><?= html_escape($address['address']); ?></td><td class="text-end"><?= (int) $address['total']; ?></td></tr><?php endforeach; ?></tbody></table></div></div></section></div>
+            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All accounts</p></div></section></div>
+            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Employees</p><div class="display-5 fw-bold"><?= (int) $employee_count; ?></div><p class="text-secondary mb-0">Active records</p></div></section></div>
+            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New today</p><div class="display-5 fw-bold"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
+            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New this month</p><div class="display-5 fw-bold"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
+            <div class="col-12 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Average age</p><div class="display-6 fw-bold"><?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Range <?= (int) $age_statistics['youngest_age']; ?>-<?= (int) $age_statistics['oldest_age']; ?></p></div></section></div>
             <div class="col-lg-6"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><h2 class="h5 mb-3">Users by age range</h2><div style="height: 300px"><canvas id="ageBreakdownChart" aria-label="Users by age range chart"></canvas></div></div></section></div>
             <div class="col-lg-6"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><h2 class="h5 mb-3">Monthly registrations</h2><div style="height: 300px"><canvas id="monthlyRegistrationsChart" aria-label="Monthly registrations chart"></canvas></div></div></section></div>
             <div class="col-12"><section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4"><h2 class="h5 mb-3">Users by address</h2><div style="height: 320px"><canvas id="addressStatisticsChart" aria-label="Users by address chart"></canvas></div></div></section></div>
@@ -70,24 +67,15 @@ $reopen_modal = $show_first_login_password_prompt
     <?php $this->load->view('components/modals/alert.php'); ?>
     <?php $this->load->view('components/modals/logout.php'); ?>
 
+    <div id="dashboardChartData"
+        data-age="<?= html_escape(json_encode(array('labels' => array('Under 18', '18-30', '31-40', '41-50', '51+'), 'values' => array_map('intval', array($age_breakdown['under_18'], $age_breakdown['age_18_30'], $age_breakdown['age_31_40'], $age_breakdown['age_41_50'], $age_breakdown['age_51_plus']))))); ?>"
+        data-monthly="<?= html_escape(json_encode($monthly_registration_statistics)); ?>"
+        data-address="<?= html_escape(json_encode($address_statistics)); ?>"
+    ></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="<?= html_escape(base_url('assets/js/app.js')); ?>"></script>
-    <script>
-        (function () {
-            'use strict';
-
-            const ageData = <?= json_encode(array(
-                'labels' => array('Under 18', '18-30', '31-40', '41-50', '51+'),
-                'values' => array_map('intval', array($age_breakdown['under_18'], $age_breakdown['age_18_30'], $age_breakdown['age_31_40'], $age_breakdown['age_41_50'], $age_breakdown['age_51_plus']))
-            ), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-            const monthlyData = <?= json_encode($monthly_registration_statistics, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-            const addressData = <?= json_encode($address_statistics, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-
-            new Chart(document.getElementById('ageBreakdownChart'), { type: 'pie', data: { labels: ageData.labels, datasets: [{ data: ageData.values, backgroundColor: ['#0d6efd', '#20c997', '#ffc107', '#fd7e14', '#dc3545'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
-            new Chart(document.getElementById('monthlyRegistrationsChart'), { type: 'line', data: { labels: monthlyData.map(function (item) { return item.registration_month; }), datasets: [{ label: 'Registrations', data: monthlyData.map(function (item) { return Number(item.total); }), borderColor: '#0d6efd', backgroundColor: 'rgba(13, 110, 253, 0.15)', fill: true, tension: 0.3 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } } });
-            new Chart(document.getElementById('addressStatisticsChart'), { type: 'bar', data: { labels: addressData.map(function (item) { return item.address; }), datasets: [{ label: 'Users', data: addressData.map(function (item) { return Number(item.total); }), backgroundColor: '#20c997', borderRadius: 6 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }, plugins: { legend: { display: false } } } });
-        }());
-    </script>
+    <script src="<?= html_escape(base_url('assets/js/dashboard.js')); ?>"></script>
 </body>
 </html>
