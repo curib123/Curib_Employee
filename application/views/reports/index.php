@@ -25,7 +25,7 @@
             </div>
         </section>
 
-        <section class="card border-0 shadow-sm rounded-4 mb-4">
+        <section class="card border-0 shadow-sm rounded-4 mb-4 page-section-card">
             <div class="card-body p-4">
                 <form method="get" action="<?= html_escape(site_url('reports')); ?>" class="row g-3 align-items-end">
                     <div class="col-md-4">
@@ -45,7 +45,7 @@
 
         <div class="row g-4">
             <div class="col-lg-6">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                <section class="card border-0 shadow-sm rounded-4 h-100 report-card">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2 class="h5 mb-0">Registration report</h2>
@@ -61,11 +61,11 @@
             </div>
 
             <div class="col-lg-6">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                <section class="card border-0 shadow-sm rounded-4 h-100 report-card">
                     <div class="card-body p-4">
                         <h2 class="h5 mb-3">Monthly registration report</h2>
-                        <div class="table-responsive">
-                            <table class="table table-sm align-middle mb-3">
+                        <div class="table-responsive report-preview-table">
+                            <table class="table table-sm align-middle data-table">
                                 <thead>
                                     <tr>
                                         <th>Month</th>
@@ -98,11 +98,11 @@
             </div>
 
             <div class="col-lg-6">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                <section class="card border-0 shadow-sm rounded-4 h-100 report-card">
                     <div class="card-body p-4">
                         <h2 class="h5 mb-3">Age statistics report</h2>
-                        <div class="table-responsive">
-                            <table class="table table-sm align-middle mb-3">
+                        <div class="table-responsive report-preview-table">
+                            <table class="table table-sm align-middle data-table">
                                 <thead>
                                     <tr>
                                         <th>Age range</th>
@@ -135,7 +135,7 @@
             </div>
 
             <div class="col-lg-6">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                <section class="card border-0 shadow-sm rounded-4 h-100 report-card">
                     <div class="card-body p-4">
                         <h2 class="h5 mb-3">Employee report</h2>
                         <p class="text-secondary mb-3">Export the separate employee records dataset.</p>
