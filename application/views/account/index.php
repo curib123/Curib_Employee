@@ -9,10 +9,17 @@
 <body class="bg-body-tertiary">
 <?php $this->load->view('components/layout.php'); ?>
 <main class="app-main container py-4 py-lg-5">
+    <section class="card border-0 shadow-sm rounded-4 overflow-hidden page-hero account-hero">
+        <div class="card-body p-4 p-lg-5">
+            <span class="badge rounded-pill text-light mb-2">Account</span>
+            <h1 class="h2 fw-bold text-light mb-1">My Account</h1>
+            <p class="text-light mb-0">Manage your profile details, picture, and password.</p>
+        </div>
+    </section>
     <div class="row g-4">
         <div class="col-lg-7">
-            <section class="card border-0 shadow-sm rounded-4"><div class="card-body p-4">
-                <h1 class="h3 mb-1">My Profile</h1><p class="text-secondary mb-4">Keep your contact details current.</p>
+            <section class="card border-0 shadow-sm rounded-4 page-section-card"><div class="card-body p-4">
+                <div class="form-section-title mb-4"><h2 class="h4 page-section-title mb-1">Profile details</h2><p class="page-section-copy mb-0">Keep your contact details current.</p></div>
                 <?= form_open('account/profile', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label" for="firstname">First name</label><input class="form-control" id="firstname" name="firstname" maxlength="100" value="<?= html_escape($current_user['firstname']); ?>" required></div>
@@ -24,15 +31,15 @@
             </div></section>
         </div>
         <div class="col-lg-5">
-            <section class="card border-0 shadow-sm rounded-4 mb-4"><div class="card-body p-4">
-                <h2 class="h5">Profile picture</h2>
-                <?php if (!empty($current_user['profile_picture'])): ?><img src="<?= html_escape(base_url($current_user['profile_picture'])); ?>" alt="Profile" class="rounded-circle mb-3" width="96" height="96" style="object-fit:cover"><?php endif; ?>
+            <section class="card border-0 shadow-sm rounded-4 mb-4 page-section-card"><div class="card-body p-4">
+                <div class="form-section-title mb-3"><h2 class="h5 page-section-title mb-1">Profile picture</h2><p class="page-section-copy small mb-0">Use a clear JPG, PNG, or WebP image.</p></div>
+                <?php if (!empty($current_user['profile_picture'])): ?><img src="<?= html_escape(base_url($current_user['profile_picture'])); ?>" alt="Profile" class="account-profile-image mb-3" width="96" height="96"><?php endif; ?>
                 <?= form_open_multipart('account/picture', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
                     <input class="form-control" type="file" name="profile_picture" accept=".jpg,.jpeg,.png,.webp" required><div class="form-text">JPG, PNG, or WebP; maximum 2 MB and 2000 x 2000 pixels.</div><button class="btn btn-outline-primary mt-3" type="submit">Upload picture</button>
                 <?= form_close(); ?>
             </div></section>
-            <section class="card border-0 shadow-sm rounded-4"><div class="card-body p-4">
-                <h2 class="h5">Change password</h2>
+            <section class="card border-0 shadow-sm rounded-4 page-section-card"><div class="card-body p-4">
+                <div class="form-section-title mb-3"><h2 class="h5 page-section-title mb-1">Change password</h2><p class="page-section-copy small mb-0">Choose a strong password you do not reuse elsewhere.</p></div>
                 <?= form_open('account/password', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
                     <label class="form-label" for="current_password">Current password</label><input class="form-control mb-3" type="password" id="current_password" name="current_password" required>
                     <label class="form-label" for="new_password">New password</label><input class="form-control mb-3" type="password" id="new_password" name="new_password" minlength="12" maxlength="72" required>
@@ -43,5 +50,5 @@
         </div>
     </div>
 </main>
-<?php $this->load->view('components/modals/alert.php'); ?><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="<?= html_escape(base_url('assets/js/app.js')); ?>"></script>
+<?php $this->load->view('components/modals/alert.php'); ?><?php $this->load->view('components/modals/logout.php'); ?><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="<?= html_escape(base_url('assets/js/app.js')); ?>"></script>
 </body></html>
