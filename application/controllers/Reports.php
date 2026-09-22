@@ -120,7 +120,7 @@ class Reports extends MY_Controller
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $this->write_plain_table($sheet, $data['headers'], $data['rows'], 1);
+        $this->write_plain_table($sheet, $data['headers'], $this->sanitize_csv_rows($data['rows']), 1);
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
         $writer->setDelimiter(',');
@@ -276,6 +276,35 @@ class Reports extends MY_Controller
                 $sheet->setCellValueExplicit($cell, (string) $value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
             }
         }
+    }
+
+    /**
+     * Prevent spreadsheet formula execution when CSV is opened in Excel or similar software.
+     */
+    private function sanitize_csv_rows($rows)
+    {
+        $safe_rows = array();
+
+        foreach ($rows as $row)
+        {
+            $safe_row = array();
+
+            foreach ($row as $value)
+            {
+                $value = (string) $value;
+
+                if ($value !== '' && preg_match('/^[=+\\-@]/', $value))
+                {
+                    $value = "'" . $value;
+                }
+
+                $safe_row[] = $value;
+            }
+
+            $safe_rows[] = $safe_row;
+        }
+
+        return $safe_rows;
     }
 
     private function stream_spreadsheet_writer($writer, $filename, $content_type)
