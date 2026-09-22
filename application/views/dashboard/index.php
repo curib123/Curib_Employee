@@ -31,7 +31,7 @@ $reopen_modal = $show_first_login_password_prompt
     <?php $this->load->view('components/layout.php'); ?>
 
     <main class="app-main container py-4 py-lg-5">
-        <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary">
+        <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary page-hero">
             <div class="card-body p-4 p-lg-5">
             <div class="row align-items-center g-3">
                 <div class="col-lg-8">
@@ -52,11 +52,11 @@ $reopen_modal = $show_first_login_password_prompt
         </section>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-5 g-3 mb-4">
-            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All accounts</p></div></section></div>
-            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Employees</p><div class="display-5 fw-bold"><?= (int) $employee_count; ?></div><p class="text-secondary mb-0">Active records</p></div></section></div>
-            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New today</p><div class="display-5 fw-bold"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
-            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New this month</p><div class="display-5 fw-bold"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
-            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Average age</p><div class="display-6 fw-bold"><?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Range <?= (int) $age_statistics['youngest_age']; ?>-<?= (int) $age_statistics['oldest_age']; ?></p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100 dashboard-stat-card"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All accounts</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100 dashboard-stat-card"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Employees</p><div class="display-5 fw-bold"><?= (int) $employee_count; ?></div><p class="text-secondary mb-0">Active records</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100 dashboard-stat-card"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New today</p><div class="display-5 fw-bold"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100 dashboard-stat-card"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New this month</p><div class="display-5 fw-bold"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100 dashboard-stat-card"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Average age</p><div class="display-6 fw-bold"><?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Range <?= (int) $age_statistics['youngest_age']; ?>-<?= (int) $age_statistics['oldest_age']; ?></p></div></section></div>
         </div>
 
         <div class="dashboard-chart-grid">
