@@ -18,7 +18,9 @@ class Users extends MY_Controller
         $per_page = in_array($requested_page_size, $allowed_page_sizes, TRUE) ? $requested_page_size : 10;
         $page = max(1, (int) $this->input->get('page'));
         $user_search = trim((string) $this->input->get('search', TRUE));
-        $user_age_range = (string) $this->input->get('age_range', TRUE);
+        $allowed_age_ranges = array('', 'under_18', '18_30', '31_40', '41_50', '51_plus');
+        $requested_age_range = (string) $this->input->get('age_range', TRUE);
+        $user_age_range = in_array($requested_age_range, $allowed_age_ranges, TRUE) ? $requested_age_range : '';
         $allowed_sorts = array('firstname', 'lastname', 'birthday', 'created_at');
         $requested_sort = (string) $this->input->get('sort', TRUE);
         $user_sort = in_array($requested_sort, $allowed_sorts, TRUE) ? $requested_sort : 'lastname';
