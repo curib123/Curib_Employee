@@ -72,14 +72,21 @@ class Users extends MY_Controller
             'profile_picture' => ''
         );
 
-        if (!$this->User_model->insert($payload))
+        $user_id = $this->User_model->insert($payload);
+
+        if (!$user_id)
         {
             $this->set_flash('danger', 'The user could not be created.');
             redirect('users');
             return;
         }
 
-        $this->set_flash('success', 'User created successfully. Temporary password: ' . $plain_password);
+        $this->session->set_flashdata('flash', array(
+            'type' => 'success',
+            'message' => 'User created successfully. The temporary password is available in the user information view.',
+            'temporary_password' => $plain_password,
+            'user_id' => (int) $user_id
+        ));
         redirect('users');
     }
 
@@ -102,6 +109,44 @@ class Users extends MY_Controller
         {
             $this->set_flash('success', 'User deleted successfully.');
         }
+        redirect('users');
+    }
+
+    public function reset_password($id)
+    {
+        $this->require_post();
+        $id = (int) $id;
+        $user = $this->User_model->find_by_id($id);
+
+        if (!$user)
+        {
+            $this->set_flash('danger', 'User not found.');
+            redirect('users');
+            return;
+        }
+
+        if (!(int) $user['must_change_password'])
+        {
+            $this->set_flash('warning', 'This user has already changed the temporary password.');
+            redirect('users');
+            return;
+        }
+
+        $plain_password = $this->generate_password(16);
+
+        if (!$this->User_model->update_password_hash($id, password_hash($plain_password, PASSWORD_DEFAULT)))
+        {
+            $this->set_flash('danger', 'The temporary password could not be regenerated.');
+            redirect('users');
+            return;
+        }
+
+        $this->session->set_flashdata('flash', array(
+            'type' => 'success',
+            'message' => 'A new temporary password was generated. It is available in the user information view.',
+            'temporary_password' => $plain_password,
+            'user_id' => $id
+        ));
         redirect('users');
     }
 

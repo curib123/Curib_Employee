@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         userIdField.value = '0';
         modalTitle.textContent = 'Add User';
         submitButton.textContent = 'Save User';
-        form.setAttribute('action', 'users/store');
+        form.setAttribute('action', form.getAttribute('data-store-url'));
         form.setAttribute('method', 'post');
     }
 
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        form.setAttribute('action', 'users/update/' + String(user.id || '0'));
+        form.setAttribute('action', form.getAttribute('data-update-url') + '/' + String(user.id || '0'));
         form.setAttribute('method', 'post');
     }
 

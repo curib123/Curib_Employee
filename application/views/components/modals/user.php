@@ -14,7 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 >
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <?= form_open('users/store', array('id' => 'userForm', 'class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
+            <?= form_open('users/store', array('id' => 'userForm', 'class' => 'needs-validation', 'novalidate' => 'novalidate', 'data-store-url' => site_url('users/store'), 'data-update-url' => site_url('users/update'))); ?>
                 <div class="modal-header bg-body-tertiary px-4 py-3">
                     <div>
                         <p class="text-uppercase small fw-semibold text-primary mb-1">User record</p>

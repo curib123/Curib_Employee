@@ -41,6 +41,7 @@ $route['users']['get'] = 'users/index';
 $route['users/store']['post'] = 'users/store';
 $route['users/edit/(:num)']['get'] = 'users/edit/$1';
 $route['users/update/(:num)']['post'] = 'users/update/$1';
+$route['users/reset-password/(:num)']['post'] = 'users/reset_password/$1';
 $route['users/delete/(:num)']['post'] = 'users/delete/$1';
 $route['reports']['get'] = 'reports/index';
 $route['reports/export']['get'] = 'reports/export';

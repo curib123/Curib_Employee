@@ -67,7 +67,7 @@ class User_model extends CI_Model
             $sort_column = isset($sort_columns[$sort]) ? $sort_columns[$sort] : 'lastname';
             $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
 
-            return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at')
+            return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at, must_change_password')
                 ->from($this->table)
                 ->group_start()
                 ->like('firstname', $search)
@@ -173,7 +173,12 @@ class User_model extends CI_Model
     // Insert a new user record into the table
     public function insert($data)
     {
-        return $this->db->insert($this->table, $data);
+        if (!$this->db->insert($this->table, $data))
+        {
+            return FALSE;
+        }
+
+        return (int) $this->db->insert_id();
     }
 
     // Update an existing user record by its ID
