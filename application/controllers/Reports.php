@@ -46,7 +46,7 @@ class Reports extends MY_Controller
             return;
         }
         $report_data = $reports[$report];
-        $format = in_array($format, array('csv', 'xls', 'pdf'), TRUE) ? $format : 'csv';
+        $format = in_array($format, array('csv', 'xls', 'pdf','docx'), TRUE) ? $format : 'csv';
         $filename = strtolower(str_replace(' ', '-', $report_data['title'])) . '-' . date('Ymd') . '.' . $format;
         if ($format === 'csv')
         {
@@ -55,6 +55,10 @@ class Reports extends MY_Controller
         elseif ($format === 'xls')
         {
             $this->download_xls($filename, $report_data);
+        }
+        elseif ($format === 'docx')
+        {
+            $this->download_docx($filename, $report_data);
         }
         else
         {
