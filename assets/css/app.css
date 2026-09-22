@@ -1,0 +1,314 @@
+:root {
+    --app-surface: #ffffff;
+    --app-surface-muted: #f8fafc;
+    --app-border: #e2e8f0;
+    --app-text: #0f172a;
+    --app-muted: #64748b;
+    --app-primary: #2563eb;
+    --app-primary-soft: #eff6ff;
+    --app-shadow: 0 14px 36px rgba(15, 23, 42, .08);
+}
+
+body.bg-body-tertiary {
+    background: #f4f7fb !important;
+    color: var(--app-text);
+}
+
+.app-main {
+    padding-right: 2rem !important;
+    padding-left: 2rem !important;
+}
+
+.app-main > .card,
+.app-main > section.card,
+.app-main .row > [class*="col-"] > .card,
+.app-main .row > [class*="col-"] > section.card {
+    border: 1px solid rgba(226, 232, 240, .82) !important;
+    box-shadow: var(--app-shadow) !important;
+}
+
+.app-main .card {
+    border-radius: 1rem !important;
+}
+
+.app-main .form-control,
+.app-main .form-select {
+    min-height: 44px;
+    border-color: #cbd5e1;
+    border-radius: .75rem;
+    box-shadow: none;
+}
+
+.app-main .form-control:focus,
+.app-main .form-select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 .22rem rgba(37, 99, 235, .12);
+}
+
+.app-main .btn {
+    font-weight: 600;
+}
+
+.directory-card {
+    overflow: visible !important;
+}
+
+.directory-card-header {
+    padding: 1.25rem 1.4rem;
+    border-bottom: 1px solid var(--app-border);
+    background: var(--app-surface);
+}
+
+.table-toolbar {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--app-border);
+    background: #fff;
+}
+
+.table-toolbar-main {
+    display: flex;
+    gap: .65rem;
+    align-items: center;
+}
+
+.table-search-wrap {
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.table-search-icon {
+    position: absolute;
+    top: 50%;
+    left: .9rem;
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.table-search-input {
+    width: 100%;
+    padding-left: 2.65rem !important;
+    padding-right: 5.4rem !important;
+}
+
+.table-search-submit {
+    position: absolute;
+    top: 50%;
+    right: .35rem;
+    min-height: 34px !important;
+    padding: .35rem .8rem;
+    border-radius: .55rem !important;
+    transform: translateY(-50%);
+}
+
+.filter-toggle {
+    position: relative;
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    border-radius: .75rem !important;
+}
+
+.filter-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+.filter-toggle.has-filters::after {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 7px;
+    height: 7px;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: var(--app-primary);
+    content: "";
+}
+
+.table-filter-panel {
+    margin-top: .85rem;
+    padding: 1rem;
+    border: 1px solid var(--app-border);
+    border-radius: .9rem;
+    background: var(--app-surface-muted);
+}
+
+.table-filter-panel .form-label {
+    margin-bottom: .35rem;
+    color: #475569;
+    font-size: .78rem;
+    font-weight: 700;
+}
+
+.data-table {
+    margin: 0;
+}
+
+.data-table thead th {
+    padding: .85rem 1rem;
+    border-bottom: 1px solid var(--app-border);
+    background: #f8fafc;
+    color: #475569;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .045em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.data-table tbody td {
+    padding: .9rem 1rem;
+    border-color: #edf2f7;
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover > * {
+    background: #f8fbff;
+}
+
+.table-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--app-border);
+    background: #fff;
+}
+
+.table-pagination-meta {
+    color: var(--app-muted);
+    font-size: .84rem;
+}
+
+.table-pagination-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.table-limit-form {
+    display: inline-flex;
+    gap: .45rem;
+    align-items: center;
+    color: var(--app-muted);
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.table-limit-form .form-select {
+    min-height: 36px;
+    width: auto;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    border-radius: .65rem;
+}
+
+.app-pagination {
+    margin: 0;
+}
+
+.app-pagination .page-link {
+    min-width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: .35rem .55rem;
+    border-color: #dbe3ef;
+    color: #334155;
+    font-weight: 600;
+}
+
+.app-pagination .page-item:first-child .page-link,
+.app-pagination .page-item:last-child .page-link {
+    border-radius: .65rem;
+}
+
+.app-pagination .page-item.active .page-link {
+    border-color: var(--app-primary);
+    background: var(--app-primary);
+    color: #fff;
+}
+
+.page-hero {
+    position: relative;
+    overflow: hidden;
+    border: 0 !important;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb 58%, #3b82f6) !important;
+}
+
+.page-hero::after {
+    position: absolute;
+    top: -70px;
+    right: -40px;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    background: rgba(255,255,255,.06);
+    content: "";
+}
+
+.page-hero .card-body {
+    position: relative;
+    z-index: 1;
+}
+
+.report-export-group .btn {
+    min-width: 82px;
+}
+
+.empty-state {
+    padding: 4rem 1.5rem;
+    text-align: center;
+}
+
+@media (max-width: 991.98px) {
+    .app-main {
+        padding-right: 1rem !important;
+        padding-left: 1rem !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .table-toolbar {
+        padding: .85rem;
+    }
+
+    .table-toolbar-main {
+        align-items: stretch;
+    }
+
+    .table-search-submit {
+        display: none;
+    }
+
+    .table-search-input {
+        padding-right: .85rem !important;
+    }
+
+    .table-pagination {
+        align-items: stretch;
+    }
+
+    .table-pagination-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .app-pagination .page-link {
+        min-width: 34px;
+        height: 34px;
+    }
+}
