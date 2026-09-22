@@ -19,7 +19,9 @@ class Employees extends MY_Controller
     public function index()
     {
         $search = trim((string) $this->input->get('search', TRUE));
-        $age_range = (string) $this->input->get('age_range', TRUE);
+        $allowed_age_ranges = array('', 'under_18', '18_30', '31_40', '41_50', '51_plus');
+        $requested_age_range = (string) $this->input->get('age_range', TRUE);
+        $age_range = in_array($requested_age_range, $allowed_age_ranges, TRUE) ? $requested_age_range : '';
         $allowed_sorts = array('firstname', 'lastname', 'birthday', 'address', 'contactno');
         $requested_sort = (string) $this->input->get('sort', TRUE);
         $sort = in_array($requested_sort, $allowed_sorts, TRUE) ? $requested_sort : 'lastname';
