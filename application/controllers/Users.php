@@ -48,11 +48,11 @@ class Users extends MY_Controller
     {
         $this->require_post();
 
-        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required');
+        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]|callback_valid_name');
+        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]|callback_valid_name');
+        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required|callback_valid_birthday');
         $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[5]|max_length[255]');
-        $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]');
+        $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]|callback_valid_contactno');
         $this->form_validation->set_rules('email', 'Email address', 'trim|required|valid_email|max_length[190]|is_unique[users.email]');
 
         if ($this->form_validation->run() === FALSE)
@@ -189,11 +189,11 @@ class Users extends MY_Controller
             return;
         }
 
-        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]');
-        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required');
+        $this->form_validation->set_rules('firstname', 'First name', 'trim|required|max_length[100]|callback_valid_name');
+        $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]|callback_valid_name');
+        $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required|callback_valid_birthday');
         $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[5]|max_length[255]');
-        $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]');
+        $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]|callback_valid_contactno');
         $this->form_validation->set_rules('email', 'Email address', 'trim|required|valid_email|max_length[190]|callback_email_available[' . $id . ']');
 
         if ($this->form_validation->run() === FALSE)
@@ -214,6 +214,82 @@ class Users extends MY_Controller
 
         $this->set_flash($updated ? 'success' : 'danger', $updated ? 'User updated successfully.' : 'The user could not be updated.');
         redirect('users');
+    }
+
+    public function valid_name($name)
+    {
+        $name = trim((string) $name);
+
+        if (!preg_match("/^[\\p{L}\\p{M}][\\p{L}\\p{M} .'-]{0,99}$/u", $name))
+        {
+            $this->form_validation->set_message(
+                'valid_name',
+                'The {field} field may contain letters, spaces, apostrophes, periods, and hyphens only.'
+            );
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    public function valid_birthday($birthday)
+    {
+        $birthday = trim((string) $birthday);
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $birthday);
+        $errors = DateTimeImmutable::getLastErrors();
+
+        if (!$date || ($errors !== FALSE && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)))
+        {
+            $this->form_validation->set_message('valid_birthday', 'The {field} field must be a valid date.');
+            return FALSE;
+        }
+
+        $today = new DateTimeImmutable('today');
+        $minimum = new DateTimeImmutable('1900-01-01');
+
+        if ($date > $today)
+        {
+            $this->form_validation->set_message('valid_birthday', 'The {field} field cannot be in the future.');
+            return FALSE;
+        }
+
+        if ($date < $minimum)
+        {
+            $this->form_validation->set_message(
+                'valid_birthday',
+                'The {field} field must be on or after January 1, 1900.'
+            );
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    public function valid_contactno($contactno)
+    {
+        $contactno = trim((string) $contactno);
+
+        if (!preg_match('/^[0-9+()\\-\\s]{7,20}$/', $contactno))
+        {
+            $this->form_validation->set_message(
+                'valid_contactno',
+                'The {field} field contains unsupported characters.'
+            );
+            return FALSE;
+        }
+
+        $digit_count = strlen(preg_replace('/\\D+/', '', $contactno));
+
+        if ($digit_count < 7 || $digit_count > 15)
+        {
+            $this->form_validation->set_message(
+                'valid_contactno',
+                'The {field} field must contain between 7 and 15 digits.'
+            );
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     public function email_available($email, $user_id)
