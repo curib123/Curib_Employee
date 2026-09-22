@@ -215,11 +215,32 @@ class Account extends MY_Controller
     {
         $date = DateTimeImmutable::createFromFormat('!Y-m-d', trim((string) $birthday));
         $errors = DateTimeImmutable::getLastErrors();
-        if (!$date || ($errors !== FALSE && ($errors['warning_count'] || $errors['error_count'])) || $date > new DateTimeImmutable('today'))
+        if (!$date || ($errors !== FALSE && ($errors['warning_count'] || $errors['error_count'])) || $date > new DateTimeImmutable('today') || $date < new DateTimeImmutable('1900-01-01'))
         {
             $this->form_validation->set_message('valid_birthday', 'Enter a valid birthday that is not in the future.');
             return FALSE;
         }
+        return TRUE;
+    }
+
+    public function valid_contactno($contactno)
+    {
+        $contactno = trim((string) $contactno);
+
+        if (!preg_match('/^[0-9+()\\-\\s]{7,20}$/', $contactno))
+        {
+            $this->form_validation->set_message('valid_contactno', 'The {field} field contains unsupported characters.');
+            return FALSE;
+        }
+
+        $digit_count = strlen(preg_replace('/\\D+/', '', $contactno));
+
+        if ($digit_count < 7 || $digit_count > 15)
+        {
+            $this->form_validation->set_message('valid_contactno', 'The {field} field must contain between 7 and 15 digits.');
+            return FALSE;
+        }
+
         return TRUE;
     }
 
@@ -241,7 +262,7 @@ class Account extends MY_Controller
         $this->form_validation->set_rules('lastname', 'Last name', 'trim|required|max_length[100]|callback_valid_name');
         $this->form_validation->set_rules('birthday', 'Birthday', 'trim|required|callback_valid_birthday');
         $this->form_validation->set_rules('address', 'Address', 'trim|required|min_length[5]|max_length[255]');
-        $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]');
+        $this->form_validation->set_rules('contactno', 'Contact number', 'trim|required|max_length[20]|callback_valid_contactno');
     }
 
      // This method refreshes the session data with the updated user information.
