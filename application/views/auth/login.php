@@ -17,7 +17,9 @@ $validation_errors = array();
     <title>Login | Curib Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body class="bg-body-secondary bg">
+<body
+    class="min-vh-100 bg-cover"
+    style="background-image: url('<?= base_url('assets/images/bg.jpg'); ?>');">
     <main class="min-vh-100 d-flex align-items-center py-4 py-lg-5">
         <div class="container">
             <section class="row justify-content-center">
