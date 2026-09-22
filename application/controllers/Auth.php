@@ -175,11 +175,24 @@ class Auth extends CI_Controller
             return;
         }
 
+        $profile_picture = $this->upload_registration_picture();
+
+        if ($profile_picture === FALSE)
+        {
+            $this->session->set_flashdata('old_input', $payload);
+            redirect('register');
+            return;
+        }
+
         $plain_password = $this->generate_password(16);
         $password_hash = password_hash($plain_password, PASSWORD_DEFAULT);
 
         if ($password_hash === FALSE)
         {
+            if ($profile_picture)
+            {
+                @unlink(FCPATH . $profile_picture);
+            }
             $this->session->set_flashdata('old_input', $payload);
             $this->set_flash('danger', 'A secure password could not be generated. Please try again.');
             redirect('register');
@@ -188,10 +201,15 @@ class Auth extends CI_Controller
 
         $payload['password'] = $password_hash;
         $payload['must_change_password'] = 1;
+        $payload['profile_picture'] = $profile_picture;
 
         if (!$this->User_model->insert($payload))
         {
-            unset($payload['password'], $payload['must_change_password']);
+            if ($profile_picture)
+            {
+                @unlink(FCPATH . $profile_picture);
+            }
+            unset($payload['password'], $payload['must_change_password'], $payload['profile_picture']);
             $this->session->set_flashdata('old_input', $payload);
             $this->set_flash(
                 'danger',
@@ -491,6 +509,40 @@ class Auth extends CI_Controller
             'contactno' => trim((string) $this->input->post('contactno', TRUE)),
             'email' => strtolower(trim((string) $this->input->post('email', TRUE)))
         );
+    }
+
+    private function upload_registration_picture()
+    {
+        if (!isset($_FILES['profile_picture']) || (int) $_FILES['profile_picture']['error'] === UPLOAD_ERR_NO_FILE)
+        {
+            return NULL;
+        }
+
+        $upload_path = FCPATH . 'uploads/profile/';
+
+        if (!is_dir($upload_path) && !mkdir($upload_path, 0750, TRUE))
+        {
+            $this->set_flash('danger', 'The profile picture folder is not writable.');
+            return FALSE;
+        }
+
+        $this->load->library('upload', array(
+            'upload_path' => $upload_path,
+            'allowed_types' => 'jpg|jpeg|png|webp',
+            'max_size' => 2048,
+            'max_width' => 2000,
+            'max_height' => 2000,
+            'encrypt_name' => TRUE,
+            'remove_spaces' => TRUE
+        ));
+
+        if (!$this->upload->do_upload('profile_picture'))
+        {
+            $this->set_flash('danger', strip_tags($this->upload->display_errors('', '')));
+            return FALSE;
+        }
+
+        return 'uploads/profile/' . $this->upload->data('file_name');
     }
 
     private function generate_password($length)

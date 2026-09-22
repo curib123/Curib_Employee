@@ -58,7 +58,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                             </a>
                         </div>
 
-                        <?= form_open('register', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
+                        <?= form_open_multipart('register', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="firstname" class="form-label">First Name</label>
@@ -152,6 +152,12 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                         required
                                     >
                                     <div class="invalid-feedback">Enter a valid email address.</div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="profile_picture" class="form-label">Profile picture <span class="text-secondary">(optional)</span></label>
+                                    <input type="file" class="form-control form-control-lg" id="profile_picture" name="profile_picture" accept=".jpg,.jpeg,.png,.webp">
+                                    <div class="form-text">JPG, PNG, or WebP; maximum 2 MB and 2000 x 2000 pixels.</div>
                                 </div>
 
                                 <div class="col-12">
