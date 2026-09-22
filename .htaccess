@@ -6,6 +6,9 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # Never execute script-like files from the public uploads directory.
+    RewriteRule ^uploads/.*\.(?:php[0-9]*|phtml|phar|cgi|pl|py|jsp|asp|aspx|sh)$ - [F,L,NC]
+
     # Prevent direct access to source, dependencies, database scripts, and tests.
     RewriteRule ^(?:application|vendor|database|tests)(?:/|$) - [F,L,NC]
 
