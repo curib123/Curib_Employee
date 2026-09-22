@@ -51,6 +51,16 @@ class Employee_model extends CI_Model
             ->row_array();
     }
 
+    public function get_report()
+    {
+        return $this->db->select('Id, firstname, lastname, birthday, address, contactno')
+            ->from($this->table)
+            ->order_by('lastname', 'ASC')
+            ->order_by('firstname', 'ASC')
+            ->get()
+            ->result_array();
+    }
+
     public function count_all()
     {
         return $this->db->count_all($this->table);

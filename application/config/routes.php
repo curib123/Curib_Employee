@@ -27,3 +27,7 @@ $route['employees']['get'] = 'employees/index';
 $route['employees/store']['post'] = 'employees/store';
 $route['employees/update/(:num)']['post'] = 'employees/update/$1';
 $route['employees/delete/(:num)']['post'] = 'employees/delete/$1';
+$route['users']['get'] = 'users/index';
+$route['users/delete/(:num)']['post'] = 'users/delete/$1';
+$route['reports']['get'] = 'reports/index';
+$route['reports/export']['get'] = 'reports/export';

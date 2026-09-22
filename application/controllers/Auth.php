@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller
 {
-    private $max_login_attempts = 5;
+    private $max_login_attempts = 10;
     private $login_window_seconds = 900;
     private $login_lock_seconds = 300;
 

@@ -53,6 +53,12 @@ $full_name = trim($first_name . ' ' . $last_name);
                 <li class="nav-item">
                     <a class="nav-link px-lg-3 rounded-3 <?= $active_nav === 'account' ? 'active fw-semibold text-primary bg-primary-subtle' : 'text-body-secondary'; ?>" href="<?= html_escape(site_url('account')); ?>">Account</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 rounded-3 <?= $active_nav === 'users' ? 'active fw-semibold text-primary bg-primary-subtle' : 'text-body-secondary'; ?>" href="<?= html_escape(site_url('users')); ?>">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 rounded-3 <?= $active_nav === 'reports' ? 'active fw-semibold text-primary bg-primary-subtle' : 'text-body-secondary'; ?>" href="<?= html_escape(site_url('reports')); ?>">Reports</a>
+                </li>
             </ul>
 
             <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3 mt-3 mt-lg-0">

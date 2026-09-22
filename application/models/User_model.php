@@ -31,6 +31,55 @@ class User_model extends CI_Model
             ->result_array();
     }
 
+    public function get_registration_report($start, $end)
+    {
+        return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at')
+            ->from($this->table)
+            ->where('created_at >=', $start)
+            ->where('created_at <', $end)
+            ->order_by('created_at', 'DESC')
+            ->get()
+            ->result_array();
+    }
+
+    public function get_management_users()
+    {
+        return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at')
+            ->from($this->table)
+            ->order_by('lastname', 'ASC')
+            ->order_by('firstname', 'ASC')
+            ->get()
+            ->result_array();
+    }
+
+    public function delete_user($id)
+    {
+        return $this->db->where('Id', (int) $id)->delete($this->table);
+    }
+
+    public function get_monthly_registration_report($start, $end)
+    {
+        return $this->db->select("DATE_FORMAT(created_at, '%Y-%m') AS registration_month, COUNT(*) AS total", FALSE)
+            ->from($this->table)
+            ->where('created_at >=', $start)
+            ->where('created_at <', $end)
+            ->group_by("DATE_FORMAT(created_at, '%Y-%m')", FALSE)
+            ->order_by('registration_month', 'ASC')
+            ->get()
+            ->result_array();
+    }
+
+    public function get_age_report()
+    {
+        return $this->db->query("SELECT age_range, total FROM (
+            SELECT 'Under 18' AS age_range, SUM(TIMESTAMPDIFF(YEAR, birthday, CURDATE()) < 18) AS total, 1 AS sort_order FROM users
+            UNION ALL SELECT '18-30', SUM(TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 18 AND 30), 2 FROM users
+            UNION ALL SELECT '31-40', SUM(TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 31 AND 40), 3 FROM users
+            UNION ALL SELECT '41-50', SUM(TIMESTAMPDIFF(YEAR, birthday, CURDATE()) BETWEEN 41 AND 50), 4 FROM users
+            UNION ALL SELECT '51+', SUM(TIMESTAMPDIFF(YEAR, birthday, CURDATE()) >= 51), 5 FROM users
+        ) AS age_report ORDER BY sort_order")->result_array();
+    }
+
     public function find_by_id($id)
     {
         return $this->db
