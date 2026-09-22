@@ -5,10 +5,14 @@
   "type": "project",
   "license": "proprietary",
   "require": {
-    "php": ">=7.4",
+    "php": ">=7.4 <8.5",
     "codeigniter/framework": "~3.1.13",
-    "dompdf/dompdf": "^2.0.8",
-    "phpoffice/phpspreadsheet": "^1.29.0"
+    "dompdf/dompdf": "^3.1.6",
+    "phpoffice/phpspreadsheet": "^1.30.7",
+    "ext-dom": "*",
+    "ext-mbstring": "*",
+    "ext-gd": "*",
+    "ext-zip": "*"
   },
   "config": {
     "sort-packages": true
