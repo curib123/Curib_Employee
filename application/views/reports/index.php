@@ -10,13 +10,20 @@
 <body class="bg-body-tertiary">
     <?php $this->load->view('components/layout.php'); ?>
 
-    <main class="app-main container py-4 py-lg-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="h2 mb-1">Reports</h1>
-                <p class="text-secondary mb-0">Registration, employee, and age statistics.</p>
+    <main class="app-main container py-3 py-lg-3">
+           <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary">
+            <div class="card-body p-3 p-lg-3">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-2 text-light">
+                        Reports
+                    </h1>
+                    <p class="lead text-light mb-0">Registration, employee, and age statistics. </p>
+                </div>
+               
             </div>
-        </div>
+            </div>
+        </section>
 
         <section class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-body p-4">

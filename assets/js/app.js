@@ -6,6 +6,26 @@
 document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(function (trigger) {
+        trigger.addEventListener('click', function (event) {
+            const targetSelector = this.getAttribute('data-bs-target');
+
+            if (!targetSelector) {
+                return;
+            }
+
+            const target = document.querySelector(targetSelector);
+
+            if (!target || typeof window.bootstrap === 'undefined' || !window.bootstrap.Modal) {
+                return;
+            }
+
+            event.preventDefault();
+            const instance = window.bootstrap.Modal.getOrCreateInstance(target);
+            instance.show();
+        });
+    });
+
     document.querySelectorAll('.needs-validation').forEach(function (form) {
         form.addEventListener('submit', function (event) {
             if (!form.checkValidity()) {
@@ -14,6 +34,25 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             form.classList.add('was-validated');
+        });
+    });
+
+    document.querySelectorAll('form[data-auto-filter]').forEach(function (form) {
+        let searchTimer;
+
+        form.querySelectorAll('input[name="search"]').forEach(function (input) {
+            input.addEventListener('input', function () {
+                window.clearTimeout(searchTimer);
+                searchTimer = window.setTimeout(function () {
+                    form.submit();
+                }, 350);
+            });
+        });
+
+        form.querySelectorAll('select').forEach(function (select) {
+            select.addEventListener('change', function () {
+                form.submit();
+            });
         });
     });
 

@@ -58,14 +58,26 @@ class User_model extends CI_Model
     }
 
     // Count the total number of users in the table
-    public function get_management_users_page($current_user_id, $page, $per_page)
+    public function get_management_users_page($current_user_id, $page, $per_page, $search = '', $age_range = '', $sort = '', $direction = 'ASC')
         {
             $offset = max(0, ((int) $page - 1) * (int) $per_page);
 
+            $this->apply_management_filters($search, $age_range);
+            $sort_columns = array('firstname' => 'firstname', 'lastname' => 'lastname', 'birthday' => 'birthday', 'created_at' => 'created_at');
+            $sort_column = isset($sort_columns[$sort]) ? $sort_columns[$sort] : 'lastname';
+            $direction = strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC';
+
             return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at')
                 ->from($this->table)
+                ->group_start()
+                ->like('firstname', $search)
+                ->or_like('lastname', $search)
+                ->or_like('email', $search)
+                ->or_like('address', $search)
+                ->or_like('contactno', $search)
+                ->group_end()
                 ->order_by('CASE WHEN Id = ' . (int) $current_user_id . ' THEN 0 ELSE 1 END', '', FALSE)
-                ->order_by('lastname', 'ASC')
+                ->order_by($sort_column, $direction)
                 ->order_by('firstname', 'ASC')
                 ->limit((int) $per_page, $offset)
                 ->get()
@@ -73,10 +85,38 @@ class User_model extends CI_Model
         }
 
     // Count the total number of users in the table
-    public function count_management_users()
+    public function count_management_users($search = '', $age_range = '')
         {
-            return $this->db->count_all($this->table);
+            $this->apply_management_filters($search, $age_range);
+            return $this->db
+                ->from($this->table)
+                ->group_start()
+                ->like('firstname', $search)
+                ->or_like('lastname', $search)
+                ->or_like('email', $search)
+                ->or_like('address', $search)
+                ->or_like('contactno', $search)
+                ->group_end()
+                ->count_all_results();
         }
+
+    private function apply_management_filters($search, $age_range)
+    {
+        $age_ranges = array(
+            'under_18' => array(0, 17),
+            '18_30' => array(18, 30),
+            '31_40' => array(31, 40),
+            '41_50' => array(41, 50),
+            '51_plus' => array(51, 100000000000)
+        );
+
+        if (isset($age_ranges[$age_range]))
+        {
+            $range = $age_ranges[$age_range];
+            $this->db->where('birthday >', date('Y-m-d', strtotime('-' . ($range[1] + 1) . ' years')));
+            $this->db->where('birthday <=', date('Y-m-d', strtotime('-' . $range[0] . ' years')));
+        }
+    }
 
     // Count the total number of users in the table
     public function delete_user($id)

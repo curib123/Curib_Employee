@@ -11,9 +11,9 @@ class Employee_model extends CI_Model
 
 
     // Retrieve a paginated list of employees with optional search, age range, address filters, and sorting
-    public function get_page($search, $age_range, $address, $sort, $direction, $page, $per_page)
+    public function get_page($search, $age_range, $sort, $direction, $page, $per_page)
     {
-        $this->apply_filters($search, $age_range, $address);
+        $this->apply_filters($search, $age_range);
 
         $sort_columns = array(
             'firstname' => 'firstname',
@@ -37,9 +37,9 @@ class Employee_model extends CI_Model
     }
 
     // Count the total number of employees matching the optional search, age range, and address filters
-    public function count_filtered($search, $age_range, $address)
+    public function count_filtered($search, $age_range)
     {
-        $this->apply_filters($search, $age_range, $address);
+        $this->apply_filters($search, $age_range);
         return $this->db->count_all_results($this->table);
     }
 
@@ -73,7 +73,7 @@ class Employee_model extends CI_Model
     }
 
     // Private helper method to apply search, age range, and address filters to the query
-    private function apply_filters($search, $age_range, $address)
+    private function apply_filters($search, $age_range)
     {
         $search = trim((string) $search);
 
@@ -85,11 +85,6 @@ class Employee_model extends CI_Model
                 ->or_like('address', $search)
                 ->or_like('contactno', $search)
                 ->group_end();
-        }
-
-        if ($address !== '')
-        {
-            $this->db->like('address', $address);
         }
 
         $age_ranges = array(

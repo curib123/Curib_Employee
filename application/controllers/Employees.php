@@ -20,15 +20,14 @@ class Employees extends MY_Controller
     {
         $search = trim((string) $this->input->get('search', TRUE));
         $age_range = (string) $this->input->get('age_range', TRUE);
-        $address = trim((string) $this->input->get('address', TRUE));
         $sort = (string) $this->input->get('sort', TRUE);
         $direction = (string) $this->input->get('direction', TRUE);
         $per_page = min(50, max(5, (int) $this->input->get('per_page')));
         $page = max(1, (int) $this->input->get('page'));
-        $total = $this->Employee_model->count_filtered($search, $age_range, $address);
+        $total = $this->Employee_model->count_filtered($search, $age_range);
         $total_pages = max(1, (int) ceil($total / $per_page));
         $page = min($page, $total_pages);
-        $employees = $this->Employee_model->get_page($search, $age_range, $address, $sort, $direction, $page, $per_page);
+        $employees = $this->Employee_model->get_page($search, $age_range, $sort, $direction, $page, $per_page);
 
         foreach ($employees as &$employee)
         {
@@ -42,7 +41,6 @@ class Employees extends MY_Controller
             'employee_total' => $total,
             'employee_search' => $search,
             'employee_age_range' => $age_range,
-            'employee_address' => $address,
             'employee_sort' => $sort,
             'employee_direction' => strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC',
             'employee_page' => $page,
