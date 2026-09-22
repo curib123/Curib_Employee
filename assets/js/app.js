@@ -37,25 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.querySelectorAll('form[data-auto-filter]').forEach(function (form) {
-        let searchTimer;
-
-        form.querySelectorAll('input[name="search"]').forEach(function (input) {
-            input.addEventListener('input', function () {
-                window.clearTimeout(searchTimer);
-                searchTimer = window.setTimeout(function () {
-                    form.submit();
-                }, 350);
-            });
-        });
-
-        form.querySelectorAll('select').forEach(function (select) {
-            select.addEventListener('change', function () {
-                form.submit();
-            });
-        });
-    });
-
     const alertModalElement = document.getElementById('alertModal');
 
     if (alertModalElement && alertModalElement.dataset.autoShow === '1') {

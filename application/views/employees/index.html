@@ -44,7 +44,7 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
                 <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis px-3 py-2"><?= (int) $employee_total; ?> employees</span>
             </div>
 
-            <form method="get" action="<?= html_escape(site_url('employees')); ?>" class="p-3 border-bottom bg-body-tertiary" data-auto-filter>
+            <form method="get" action="<?= html_escape(site_url('employees')); ?>" class="p-3 border-bottom bg-body-tertiary">
                 <div class="row g-2 align-items-end">
                     <div class="col-md-10"><label class="form-label small" for="employeeSearch">Search name, contact, or address</label><input class="form-control" id="employeeSearch" name="search" value="<?= html_escape($employee_search); ?>" placeholder="Name, contact number, or address"></div>
                     <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Search</button></div>

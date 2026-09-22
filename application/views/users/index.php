@@ -34,7 +34,7 @@ $modal_id = 0;
 				<span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis px-3 py-2"><?= (int) $user_total; ?> <?= $user_total === 1 ? 'user' : 'users'; ?></span>
 			</div>
 
-			<form method="get" action="<?= html_escape(site_url('users')); ?>" class="p-3 border-bottom bg-body-tertiary" data-auto-filter>
+			<form method="get" action="<?= html_escape(site_url('users')); ?>" class="p-3 border-bottom bg-body-tertiary">
 				<input type="hidden" name="per_page" value="<?= (int) $user_per_page; ?>">
 				<div class="row g-2 align-items-end">
 					<div class="col-md-10">
