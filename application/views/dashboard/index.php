@@ -53,53 +53,13 @@ $reopen_modal = $show_first_login_password_prompt
             </div>
         </section>
 
-        <div class="row g-5">
-            <div class="col-md-6 col-xl-4">
-                <section class="card border-0 shadow-lg rounded-4 h-100">
-                    <div class="card-body p-4">
-                    <p class="text-uppercase small fw-semibold text-secondary mb-2">Total employees</p>
-                    <div class="display-5 fw-bold mb-2"><?= (int) $employee_count; ?></div>
-                    <p class="text-secondary mb-0">Current records in the employee database.</p>
-                    </div>
-                </section>
-            </div>
-
-            <div class="col-md-6 col-xl-4">
-                <section class="card border-0 shadow-lg rounded-4 h-100">
-                    <div class="card-body p-4">
-                    <p class="text-uppercase small fw-semibold text-secondary mb-2">Signed in as</p>
-                    <div class="h4 fw-bold text-break mb-2"><?= html_escape($current_user['email']); ?></div>
-                    <p class="text-secondary mb-0">Your session is protected by server-side authentication.</p>
-                    </div>
-                </section>
-            </div>
-             <div class="col-xl-4">
-                <section class="card border-0 shadow-lg rounded-4 h-100">
-                    <div class="card-body p-4">
-                    <h2 class="h4 fw-bold mb-2">User Profile</h2>
-                    <p class="text-secondary mb-1"> Fullname : <?= html_escape($current_user['firstname']); ?> <?= html_escape($current_user['lastname']); ?></p>
-                     <p class="text-secondary mb-1"> Contact No. : <?= html_escape($current_user['contactno']); ?> </p>
-                     <p class="text-secondary mb-1"> Address : <?= html_escape($current_user['address']); ?> </p>
-                     <p class="text-secondary mb-1"> Birthday : <?= html_escape(date('M d, Y', strtotime($current_user['birthday']))); ?> </p>
-                      <p class="text-secondary mb-1"> Age : <?= html_escape($current_user['age']); ?> </p>
-                    </div>
-
-                    </div>
-                </section>
-            </div>
-
-            <div class="col-xl-4 mt-5">
-                <section class="card border-0 shadow-lg rounded-4 h-100">
-                    <div class="card-body p-4">
-                    <p class="text-uppercase small fw-semibold text-secondary mb-2">Quick route</p>
-                    <h2 class="h4 fw-bold mb-2">Employee Management</h2>
-                    <p class="text-secondary mb-3">Add, inspect, edit, and delete records using modal actions.</p>
-                    <a href="<?= html_escape(site_url('employees')); ?>" class="btn btn-outline-primary">
-                        Open Employees
-                    </a>
-                    </div>
-                </section>
-            </div>
+        <div class="row g-4 mt-4">
+            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold mb-2"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All user accounts.</p></div></section></div>
+            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New users today</p><div class="display-5 fw-bold mb-2"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">Accounts created today.</p></div></section></div>
+            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New users this month</p><div class="display-5 fw-bold mb-2"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">Accounts created this month.</p></div></section></div>
+            <div class="col-sm-6 col-xl-3"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Age statistics</p><div class="h5 mb-2">Average: <?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Youngest <?= (int) $age_statistics['youngest_age']; ?>, oldest <?= (int) $age_statistics['oldest_age']; ?>.</p></div></section></div>
+            <div class="col-12"><section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4"><h2 class="h5 mb-3">Users by age range</h2><div class="row g-3"><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">Under 18</div><div class="h4 mb-0"><?= (int) $age_breakdown['under_18']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">18-30</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_18_30']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">31-40</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_31_40']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">41-50</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_41_50']; ?></div></div></div><div class="col-6 col-md"><div class="border rounded-3 p-3"><div class="small text-secondary">51+</div><div class="h4 mb-0"><?= (int) $age_breakdown['age_51_plus']; ?></div></div></div></div></div></section></div>
+            <div class="col-12"><section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4"><h2 class="h5 mb-3">Top user addresses</h2><div class="table-responsive"><table class="table mb-0"><thead><tr><th>Address</th><th class="text-end">Users</th></tr></thead><tbody><?php foreach ($address_statistics as $address): ?><tr><td><?= html_escape($address['address']); ?></td><td class="text-end"><?= (int) $address['total']; ?></td></tr><?php endforeach; ?></tbody></table></div></div></section></div>
         </div>
     </main>
 

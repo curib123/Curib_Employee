@@ -50,6 +50,9 @@ $full_name = trim($first_name . ' ' . $last_name);
                         Employees
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 rounded-3 <?= $active_nav === 'account' ? 'active fw-semibold text-primary bg-primary-subtle' : 'text-body-secondary'; ?>" href="<?= html_escape(site_url('account')); ?>">Account</a>
+                </li>
             </ul>
 
             <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-3 mt-3 mt-lg-0">
@@ -57,6 +60,7 @@ $full_name = trim($first_name . ' ' . $last_name);
                     <div class="small fw-semibold"><?= html_escape($full_name); ?></div>
                     <div class="small text-secondary"><?= html_escape($current_user['email']); ?></div>
                 </div>
+                <?php if (!empty($current_user['profile_picture'])): ?><img src="<?= html_escape(base_url($current_user['profile_picture'])); ?>" alt="Profile" class="rounded-circle" width="40" height="40" style="object-fit:cover"><?php endif; ?>
 
                 <button
                     type="button"

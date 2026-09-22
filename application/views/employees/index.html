@@ -19,32 +19,41 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
 <body class="bg-body-tertiary">
     <?php $this->load->view('components/top_nav.php'); ?>
 
-    <main class="container py-4 py-lg-5">
-        <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <main class="container  py-4 py-lg-5">
+        <div class="card border-0 bg-primary shadow-lg rounded-4 mb-4">
             <div class="card-body p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div>
-                <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis mb-2">Employee Management</span>
-                <h1 class="h2 fw-bold mb-1">Employees</h1>
-                <p class="text-secondary mb-0">
+                <span class="badge rounded-pill text-light mb-2">Employee Management</span>
+                <h1 class="h2 fw-bold text-light mb-1">Employees</h1>
+                <p class="text-light mb-0">
                     Manage employee records .
                 </p>
             </div>
 
-            <button type="button" class="btn btn-primary btn-lg rounded-3 px-4 align-self-md-center" data-action="add-employee">
+            <button type="button" class="btn btn-light btn-lg rounded-3 px-4 align-self-md-center" data-action="add-employee">
                 Add Employee
             </button>
             </div>
         </div>
 
-        <section class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <section class="card border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 p-4 border-bottom bg-white">
                 <div>
                     <h2 class="h5 mb-1">Employee Directory</h2>
                 </div>
-                <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis px-3 py-2">
-                    <?= count($employees); ?> <?= count($employees) === 1 ? 'employee' : 'employees'; ?>
-                </span>
+                <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis px-3 py-2"><?= (int) $employee_total; ?> employees</span>
             </div>
+
+            <form method="get" action="<?= html_escape(site_url('employees')); ?>" class="p-3 border-bottom bg-body-tertiary">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4"><label class="form-label small" for="employeeSearch">Search name or contact</label><input class="form-control" id="employeeSearch" name="search" value="<?= html_escape($employee_search); ?>"></div>
+                    <div class="col-md-3"><label class="form-label small" for="employeeAddress">Address contains</label><input class="form-control" id="employeeAddress" name="address" value="<?= html_escape($employee_address); ?>"></div>
+                    <div class="col-6 col-md-2"><label class="form-label small" for="employeeAgeRange">Age range</label><select class="form-select" id="employeeAgeRange" name="age_range"><option value="">All ages</option><option value="under_18" <?= $employee_age_range === 'under_18' ? 'selected' : ''; ?>>Under 18</option><option value="18_30" <?= $employee_age_range === '18_30' ? 'selected' : ''; ?>>18-30</option><option value="31_40" <?= $employee_age_range === '31_40' ? 'selected' : ''; ?>>31-40</option><option value="41_50" <?= $employee_age_range === '41_50' ? 'selected' : ''; ?>>41-50</option><option value="51_plus" <?= $employee_age_range === '51_plus' ? 'selected' : ''; ?>>51+</option></select></div>
+                    <div class="col-6 col-md-2"><label class="form-label small" for="employeeSort">Sort by name</label><select class="form-select" id="employeeSort" name="sort"><option value="lastname" <?= $employee_sort === 'lastname' ? 'selected' : ''; ?>>Last name</option><option value="firstname" <?= $employee_sort === 'firstname' ? 'selected' : ''; ?>>First name</option><option value="birthday" <?= $employee_sort === 'birthday' ? 'selected' : ''; ?>>Birthday</option></select></div>
+                    <div class="col-6 col-md-2"><label class="form-label small" for="employeeDirection">Order</label><select class="form-select" id="employeeDirection" name="direction"><option value="ASC" <?= $employee_direction === 'ASC' ? 'selected' : ''; ?>>Ascending</option><option value="DESC" <?= $employee_direction === 'DESC' ? 'selected' : ''; ?>>Descending</option></select></div>
+                    <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Apply</button></div>
+                </div>
+            </form>
 
             <?php if (empty($employees)): ?>
                 <div class="card-body py-5 text-center">
@@ -124,6 +133,7 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
                         </tbody>
                     </table>
                 </div>
+                <?php if ($employee_total_pages > 1): ?><nav class="p-3" aria-label="Employee pages"><ul class="pagination mb-0 justify-content-center"><?php for ($page_number = 1; $page_number <= $employee_total_pages; $page_number++): ?><li class="page-item <?= $page_number === $employee_page ? 'active' : ''; ?>"><a class="page-link" href="<?= html_escape(site_url('employees') . '?' . http_build_query(array('search' => $employee_search, 'address' => $employee_address, 'age_range' => $employee_age_range, 'sort' => $employee_sort, 'direction' => $employee_direction, 'page' => $page_number, 'per_page' => $employee_per_page))); ?>"><?= $page_number; ?></a></li><?php endfor; ?></ul></nav><?php endif; ?>
             <?php endif; ?>
         </section>
     </main>

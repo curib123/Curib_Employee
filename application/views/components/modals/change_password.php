@@ -33,9 +33,8 @@ $has_password_errors = !empty($validation_errors);
             ); ?>
                 <div class="modal-header border-0 bg-body-tertiary px-4 pt-4 pb-3">
                     <div>
-                        <span class="badge rounded-pill text-bg-primary mb-2">First login</span>
                         <h2 class="modal-title fs-4" id="firstLoginPasswordModalLabel">
-                            Change your generated password?
+                            Change your password?
                         </h2>
                     </div>
                 </div>
@@ -44,6 +43,12 @@ $has_password_errors = !empty($validation_errors);
                     <div class="alert alert-primary border-0 mb-4" role="alert">
                         <div class="fw-semibold mb-1">Secure your account</div>
                         <div class="small">Replace the generated password now, or skip once and continue using it. This prompt will not appear again after either choice.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label">Current password</label>
+                        <input type="password" class="form-control form-control-lg" id="current_password" name="current_password" autocomplete="current-password" required>
+                        <div class="invalid-feedback">Enter your current password.</div>
                     </div>
 
                     <div class="mb-3">

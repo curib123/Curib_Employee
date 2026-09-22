@@ -15,6 +15,10 @@ $route['register']['get'] = 'auth/register';
 $route['register']['post'] = 'auth/register_submit';
 $route['password/change']['post'] = 'auth/change_password';
 $route['password/skip']['post'] = 'auth/skip_password_change';
+$route['account']['get'] = 'account/index';
+$route['account/profile']['post'] = 'account/update_profile';
+$route['account/password']['post'] = 'account/change_password';
+$route['account/picture']['post'] = 'account/upload_picture';
 $route['logout']['post'] = 'auth/logout';
 
 $route['dashboard']['get'] = 'dashboard/index';

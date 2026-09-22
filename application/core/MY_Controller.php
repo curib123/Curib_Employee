@@ -37,6 +37,7 @@ class MY_Controller extends CI_Controller
             'address' => (string) $this->session->userdata('user_address'),
             'birthday' => (string) $this->session->userdata('user_birthday'),
             'age' => (string) $this->session->userdata('user_age')
+            ,'profile_picture' => (string) $this->session->userdata('user_profile_picture')
         );
 
      

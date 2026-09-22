@@ -10,7 +10,7 @@
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.58);
+  background: rgba(0, 0, 0, 0.70);
   pointer-events: none;
   z-index: 0;
 }
@@ -21,5 +21,5 @@
 }
 
 .auth-page .card {
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(15px);
 }

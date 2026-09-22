@@ -224,6 +224,11 @@ class Auth extends CI_Controller
         }
 
         $this->form_validation->set_rules(
+            'current_password',
+            'Current password',
+            'required|max_length[72]'
+        );
+        $this->form_validation->set_rules(
             'new_password',
             'New password',
             'required|min_length[12]|max_length[72]|callback_strong_password'
@@ -246,12 +251,20 @@ class Auth extends CI_Controller
 
         $user_id = (int) $this->session->userdata('user_id');
         $user = $this->User_model->find_by_id($user_id);
+        $current_password = (string) $this->input->post('current_password', FALSE);
         $new_password = (string) $this->input->post('new_password', FALSE);
 
         if (!$user)
         {
             $this->session->sess_destroy();
             redirect('login');
+            return;
+        }
+
+        if (!password_verify($current_password, $user['password']))
+        {
+            $this->session->set_flashdata('password_validation_errors', array('current_password' => 'Your current password is incorrect.'));
+            redirect('dashboard');
             return;
         }
 
@@ -523,6 +536,7 @@ class Auth extends CI_Controller
             'user_birthday' => (string) $user['birthday'],
             'user_age' => (string) $calculatedAge,
             'user_password_prompt_pending' => ((int) $user['must_change_password'] === 1)
+            ,'user_profile_picture' => (string) (isset($user['profile_picture']) ? $user['profile_picture'] : '')
         ));
     }
 
