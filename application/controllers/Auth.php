@@ -124,11 +124,13 @@ class Auth extends CI_Controller
             }
         }
 
+       
+
         $this->start_authenticated_session($user);
 
         if ((int) $user['must_change_password'] !== 1)
         {
-            $this->set_flash('success', 'Welcome back, ' . $user['firstname'] . '.');
+            $this->set_flash('success', 'Welcome back, ' . $user['firstname'] . '.' );
         }
 
         redirect('dashboard');
@@ -505,6 +507,9 @@ class Auth extends CI_Controller
 
     private function start_authenticated_session($user)
     {
+
+       $calculatedAge = $this->calculate_age($user['birthday']);
+
         $this->session->sess_regenerate(TRUE);
 
         $this->session->set_userdata(array(
@@ -513,6 +518,10 @@ class Auth extends CI_Controller
             'user_firstname' => (string) $user['firstname'],
             'user_lastname' => (string) $user['lastname'],
             'user_email' => (string) $user['email'],
+            'user_address' => (string) $user['address'],
+            'user_contactno' => (string) $user['contactno'],
+            'user_birthday' => (string) $user['birthday'],
+            'user_age' => (string) $calculatedAge,
             'user_password_prompt_pending' => ((int) $user['must_change_password'] === 1)
         ));
     }
@@ -543,4 +552,21 @@ class Auth extends CI_Controller
             show_error('Method Not Allowed', 405);
         }
     }
+
+    private function calculate_age($birthday){
+
+         try
+        {
+            $birthday = new DateTimeImmutable($birthday);
+            return $birthday->diff(new DateTimeImmutable('today'))->y;
+
+        }
+        catch (Exception $exception)
+        {
+            return 00000;
+        }
+
+    }
+
+    
 }

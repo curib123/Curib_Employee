@@ -19,7 +19,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="modal-header border-0 bg-body-tertiary px-4 pt-4 pb-3">
                 <div>
-                    <span class="badge rounded-pill text-bg-success mb-2">Registration complete</span>
+                    <span class="badge rounded text-bg-success mb-2">Registration complete</span>
                     <h1 class="modal-title fs-4" id="generatedPasswordModalLabel">Save your generated password</h1>
                 </div>
             </div>
@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
 
                 <div class="alert alert-warning mt-3 mb-0" role="alert">
-                    This password is shown only once. Only its secure hash is stored in the database.
+                    This password is shown only once.
                 </div>
             </div>
 

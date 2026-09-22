@@ -31,30 +31,31 @@ $reopen_modal = $show_first_login_password_prompt
     <?php $this->load->view('components/top_nav.php'); ?>
 
     <main class="container py-4 py-lg-5">
-        <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+        <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary">
             <div class="card-body p-4 p-lg-5">
-            <div class="row align-items-center g-4">
+            <div class="row align-items-center g-3">
                 <div class="col-lg-8">
-                    <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis mb-3">Dashboard</span>
-                    <h1 class="display-6 fw-bold mb-2">
-                        Hello, <?= html_escape($current_user['firstname']); ?>.
+                    <span class="badge rounded-pill text-light mb-3">Dashboard</span>
+                    <h1 class="display-5 fw-bold mb-2 text-light">
+                        Hello, <?= html_escape($current_user['lastname']); ?>.
                     </h1>
-                    <p class="lead text-secondary mb-0">
-                        Your employee workspace is ready. Manage records securely from one simple interface.
+                    <p class="lead text-light mb-0">
+                        Your employee workspace is ready. Manage records and Ready to go.
                     </p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                    <a href="<?= html_escape(site_url('employees')); ?>" class="btn btn-primary btn-lg rounded-3 px-4">
+                    <a href="<?= html_escape(site_url('employees')); ?>" class="btn btn-light btn-lg rounded-3 px-3 m-1">
                         Manage Employees
                     </a>
+            
                 </div>
             </div>
             </div>
         </section>
 
-        <div class="row g-4">
+        <div class="row g-5">
             <div class="col-md-6 col-xl-4">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                <section class="card border-0 shadow-lg rounded-4 h-100">
                     <div class="card-body p-4">
                     <p class="text-uppercase small fw-semibold text-secondary mb-2">Total employees</p>
                     <div class="display-5 fw-bold mb-2"><?= (int) $employee_count; ?></div>
@@ -64,7 +65,7 @@ $reopen_modal = $show_first_login_password_prompt
             </div>
 
             <div class="col-md-6 col-xl-4">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                <section class="card border-0 shadow-lg rounded-4 h-100">
                     <div class="card-body p-4">
                     <p class="text-uppercase small fw-semibold text-secondary mb-2">Signed in as</p>
                     <div class="h4 fw-bold text-break mb-2"><?= html_escape($current_user['email']); ?></div>
@@ -72,9 +73,23 @@ $reopen_modal = $show_first_login_password_prompt
                     </div>
                 </section>
             </div>
+             <div class="col-xl-4">
+                <section class="card border-0 shadow-lg rounded-4 h-100">
+                    <div class="card-body p-4">
+                    <h2 class="h4 fw-bold mb-2">User Profile</h2>
+                    <p class="text-secondary mb-1"> Fullname : <?= html_escape($current_user['firstname']); ?> <?= html_escape($current_user['lastname']); ?></p>
+                     <p class="text-secondary mb-1"> Contact No. : <?= html_escape($current_user['contactno']); ?> </p>
+                     <p class="text-secondary mb-1"> Address : <?= html_escape($current_user['address']); ?> </p>
+                     <p class="text-secondary mb-1"> Birthday : <?= html_escape(date('M d, Y', strtotime($current_user['birthday']))); ?> </p>
+                      <p class="text-secondary mb-1"> Age : <?= html_escape($current_user['age']); ?> </p>
+                    </div>
 
-            <div class="col-xl-4">
-                <section class="card border-0 shadow-sm rounded-4 h-100">
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-xl-4 mt-5">
+                <section class="card border-0 shadow-lg rounded-4 h-100">
                     <div class="card-body p-4">
                     <p class="text-uppercase small fw-semibold text-secondary mb-2">Quick route</p>
                     <h2 class="h4 fw-bold mb-2">Employee Management</h2>

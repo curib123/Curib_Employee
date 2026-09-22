@@ -185,6 +185,7 @@ $validation_id = isset($validation_context['id']) ? (int) $validation_context['i
             </div>
             <div class="modal-body p-4">
                 <dl class="row g-2 mb-0">
+                    
                     <dt class="col-sm-4 text-secondary small text-uppercase">ID</dt>
                     <dd class="col-sm-8" id="infoId"></dd>
 

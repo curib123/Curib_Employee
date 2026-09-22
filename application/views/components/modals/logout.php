@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <p class="text-secondary mb-0">Your current session will end and you will return to the login page.</p>
+                    <p class="text-secondary mb-0">Are you sure you want to logout in this session?.</p>
                 </div>
                 <div class="modal-footer border-0 bg-body-tertiary px-4 py-3">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Stay signed in</button>

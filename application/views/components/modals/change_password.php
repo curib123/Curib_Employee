@@ -54,12 +54,12 @@ $has_password_errors = !empty($validation_errors);
                             id="new_password"
                             name="new_password"
                             minlength="12"
-                            maxlength="72"
-                            autocomplete="new-password"
+                            maxlength="20"
+                            autocomplete="off"
                             required
                         >
                         <div class="form-text">
-                            At least 12 characters with uppercase, lowercase, a number, and a symbol.
+                            At least 12 characters and maximum of 20 characters with uppercase, lowercase, a number, and a symbol.
                         </div>
                         <div class="invalid-feedback">Enter a strong new password.</div>
                     </div>
@@ -72,8 +72,8 @@ $has_password_errors = !empty($validation_errors);
                             id="confirm_password"
                             name="confirm_password"
                             minlength="12"
-                            maxlength="72"
-                            autocomplete="new-password"
+                            maxlength="20"
+                            autocomplete="off"
                             required
                         >
                         <div class="invalid-feedback">Confirm your new password.</div>

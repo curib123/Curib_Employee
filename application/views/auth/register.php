@@ -53,7 +53,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <p class="text-secondary mb-0">Complete all required fields to create your account.</p>
                             </div>
                             <a href="<?= html_escape(site_url('login')); ?>" class="btn btn-outline-secondary align-self-sm-start">
-                                Back to Login
+                               < Back to Login
                             </a>
                         </div>
 
@@ -62,12 +62,13 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <div class="col-md-6">
                                     <label for="firstname" class="form-label">First Name</label>
                                     <input
+                                      
                                         type="text"
                                         class="form-control form-control-lg"
                                         id="firstname"
                                         name="firstname"
-                                        maxlength="100"
-                                        autocomplete="given-name"
+                                        maxlength="50"
+                                        autocomplete="off"
                                         value="<?= html_escape(isset($old_input['firstname']) ? $old_input['firstname'] : ''); ?>"
                                         required
                                     >
@@ -77,12 +78,13 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <div class="col-md-6">
                                     <label for="lastname" class="form-label">Last Name</label>
                                     <input
+                                    
                                         type="text"
                                         class="form-control form-control-lg"
                                         id="lastname"
                                         name="lastname"
-                                        maxlength="100"
-                                        autocomplete="family-name"
+                                        maxlength="50"
+                                        autocomplete="off"
                                         value="<?= html_escape(isset($old_input['lastname']) ? $old_input['lastname'] : ''); ?>"
                                         required
                                     >
@@ -92,6 +94,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <div class="col-md-6">
                                     <label for="birthday" class="form-label">Birthday</label>
                                     <input
+                                        autocomplete="off"
                                         type="date"
                                         class="form-control form-control-lg"
                                         id="birthday"
@@ -107,13 +110,13 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                 <div class="col-md-6">
                                     <label for="contactno" class="form-label">Contact No.</label>
                                     <input
+                                        autocomplete="off"
                                         type="tel"
                                         class="form-control form-control-lg"
                                         id="contactno"
                                         name="contactno"
-                                        maxlength="20"
+                                        maxlength="11"
                                         pattern="[0-9+()\-\s]{7,20}"
-                                        autocomplete="tel"
                                         inputmode="tel"
                                         value="<?= html_escape(isset($old_input['contactno']) ? $old_input['contactno'] : ''); ?>"
                                         required
@@ -129,7 +132,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                         name="address"
                                         rows="3"
                                         maxlength="255"
-                                        autocomplete="street-address"
+                                        autocomplete="off"
                                         required
                                     ><?= html_escape(isset($old_input['address']) ? $old_input['address'] : ''); ?></textarea>
                                     <div class="invalid-feedback">Address is required.</div>
@@ -143,7 +146,7 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
                                         id="email"
                                         name="email"
                                         maxlength="190"
-                                        autocomplete="email"
+                                        autocomplete="off"
                                         value="<?= html_escape(isset($old_input['email']) ? $old_input['email'] : ''); ?>"
                                         required
                                     >

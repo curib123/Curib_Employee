@@ -19,6 +19,17 @@ class User_model extends CI_Model
             ->get()
             ->row_array();
     }
+ 
+    public function get_all()
+    {
+        return $this->db
+             ->select('Id, firstname, lastname, birthday, address, contactno, email, password, must_change_password')
+            ->from($this->table)
+            ->order_by('lastname', 'ASC')
+            ->order_by('firstname', 'ASC')
+            ->get()
+            ->result_array();
+    }
 
     public function find_by_id($id)
     {

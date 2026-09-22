@@ -32,8 +32,14 @@ class MY_Controller extends CI_Controller
             'id' => (int) $this->session->userdata('user_id'),
             'firstname' => (string) $this->session->userdata('user_firstname'),
             'lastname' => (string) $this->session->userdata('user_lastname'),
-            'email' => (string) $this->session->userdata('user_email')
+            'email' => (string) $this->session->userdata('user_email'),
+            'contactno' => (string) $this->session->userdata('user_contactno'),
+            'address' => (string) $this->session->userdata('user_address'),
+            'birthday' => (string) $this->session->userdata('user_birthday'),
+            'age' => (string) $this->session->userdata('user_age')
         );
+
+     
     }
 
     protected function require_post()

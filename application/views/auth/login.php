@@ -17,7 +17,7 @@ $validation_errors = array();
     <title>Login | Curib Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
-<body class="bg-body-tertiary">
+<body class="bg-body-secondary bg">
     <main class="min-vh-100 d-flex align-items-center py-4 py-lg-5">
         <div class="container">
             <section class="row justify-content-center">
@@ -28,16 +28,16 @@ $validation_errors = array();
                     <div class="h-100 p-4 p-lg-5 d-flex flex-column justify-content-between bg-primary text-white">
                         <div>
                             <div class="d-inline-flex align-items-center gap-2 mb-4">
-                                <span class="badge text-bg-light text-primary fs-5 p-2">C</span>
-                                <span class="fw-semibold">Curib Employee</span>
+                                <span class="badge text-bg-light text-primary fs-5 p-2">CEM</span>
+                                <span class="fw-semibold">Curib Employee Management </span>
                             </div>
-                            <h1 class="display-6 fw-bold">Welcome back.</h1>
+                            <h1 class="display-6 fw-bold mt-5">Welcome back</h1>
                             <p class="lead opacity-75 mb-0">
-                                Sign in with your email and the secure password generated when you registered.
+                                Sign in with your email.
                             </p>
                         </div>
-                        <div class="mt-5 pt-4 border-top border-light border-opacity-25">
-                            <p class="small opacity-75 mb-0">Secure employee management powered by CodeIgniter 3 and Bootstrap 5.</p>
+                        <div class="mt-5 pt-5 border-top border-light border-opacity-25">
+                            <p class="small opacity-75 mb-0">Secure employee management.</p>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ $validation_errors = array();
                         <div class="mb-4">
                             <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis mb-3">Account access</span>
                             <h2 class="h2 fw-bold mb-2">Sign in</h2>
-                            <p class="text-secondary mb-0">Use your registered email and generated password to continue.</p>
+                            <p class="text-secondary mb-0">Use your registered email.</p>
                         </div>
 
                         <?= form_open('login', array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>
@@ -86,7 +86,7 @@ $validation_errors = array();
                         <div class="border-top mt-4 pt-4">
                         <p class="text-center text-secondary mb-0">
                             New here?
-                            <a href="<?= html_escape(site_url('register')); ?>" class="fw-semibold text-decoration-none">
+                            <a href="<?= html_escape(site_url('register')); ?>" class="fw-semibold text-primary text-decoration-none">
                                 Create an account
                             </a>
                         </p>
