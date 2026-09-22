@@ -18,9 +18,10 @@ $old_input = isset($old_input) && is_array($old_input) ? $old_input : array();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register | Curib Employee</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?= html_escape(base_url('assets/css/auth.css')); ?>">
 </head>
-<body class="bg-body-tertiary">
-    <main class="min-vh-100 d-flex align-items-center py-4 py-lg-5">
+<body class="auth-page min-vh-100">
+    <main class="min-vh-100 d-flex align-items-center py-4 py-lg-5 position-relative">
         <div class="container">
             <section class="row justify-content-center">
                 <div class="col-12 col-xl-10">

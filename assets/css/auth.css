@@ -1,0 +1,25 @@
+.auth-page {
+  position: relative;
+  background-image: url('../images/bg.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.auth-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-page .card {
+  backdrop-filter: blur(2px);
+}
