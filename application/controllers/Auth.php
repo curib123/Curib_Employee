@@ -556,11 +556,11 @@ class Auth extends CI_Controller
 
         $this->load->library('upload', array(
             'upload_path' => $upload_path,
-            'allowed_types' => '*',
+            'allowed_types' => 'jpg|jpeg|png|webp',
             'max_size' => 2048,
             'max_width' => 2000,
             'max_height' => 2000,
-            'detect_mime' => FALSE,
+            'detect_mime' => TRUE,
             'encrypt_name' => TRUE,
             'remove_spaces' => TRUE
         ));
