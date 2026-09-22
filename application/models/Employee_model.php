@@ -90,7 +90,7 @@ class Employee_model extends CI_Model
             '18_30' => array(18, 30),
             '31_40' => array(31, 40),
             '41_50' => array(41, 50),
-            '51_plus' => array(51, 200)
+            '51_plus' => array(51, 100000000000)
         );
 
         if (isset($age_ranges[$age_range]))
