@@ -11,7 +11,7 @@
     <?php $this->load->view('components/layout.php'); ?>
 
     <main class="app-main container py-3 py-lg-3">
-           <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary">
+           <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary page-hero">
             <div class="card-body p-3 p-lg-3">
             <div class="row align-items-center g-3">
                 <div class="col-lg-8">
@@ -51,9 +51,9 @@
                             <h2 class="h5 mb-0">Registration report</h2>
                         </div>
                         <p class="text-secondary mb-3"><?= (int) $registration_count; ?> registrations in the selected date range.</p>
-                        <div class="btn-group flex-wrap" role="group" aria-label="Registration export options">
+                        <div class="btn-group flex-wrap report-export-group" role="group" aria-label="Registration export options">
                             <a class="btn btn-outline-success" href="<?= html_escape(site_url('reports/export') . '?report=registrations&format=csv&' . http_build_query($query)); ?>">CSV</a>
-                            <a class="btn btn-outline-success" href="<?= html_escape(site_url('reports/export') . '?report=registrations&format=xls&' . http_build_query($query)); ?>">Excel</a>
+                            <a class="btn btn-outline-success" href="<?= html_escape(site_url('reports/export') . '?report=registrations&format=xlsx&' . http_build_query($query)); ?>">Excel</a>
                             <a class="btn btn-outline-danger" href="<?= html_escape(site_url('reports/export') . '?report=registrations&format=pdf&' . http_build_query($query)); ?>">PDF</a>
                         </div>
                     </div>
@@ -88,9 +88,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="btn-group flex-wrap" role="group" aria-label="Monthly registration export options">
+                        <div class="btn-group flex-wrap report-export-group" role="group" aria-label="Monthly registration export options">
                             <a class="btn btn-outline-success btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=monthly&format=csv&' . http_build_query($query)); ?>">CSV</a>
-                            <a class="btn btn-outline-success btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=monthly&format=xls&' . http_build_query($query)); ?>">Excel</a>
+                            <a class="btn btn-outline-success btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=monthly&format=xlsx&' . http_build_query($query)); ?>">Excel</a>
                             <a class="btn btn-outline-danger btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=monthly&format=pdf&' . http_build_query($query)); ?>">PDF</a>
                         </div>
                     </div>
@@ -125,9 +125,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="btn-group flex-wrap" role="group" aria-label="Age statistics export options">
+                        <div class="btn-group flex-wrap report-export-group" role="group" aria-label="Age statistics export options">
                             <a class="btn btn-outline-success btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=age&format=csv'); ?>">CSV</a>
-                            <a class="btn btn-outline-success btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=age&format=xls'); ?>">Excel</a>
+                            <a class="btn btn-outline-success btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=age&format=xlsx'); ?>">Excel</a>
                             <a class="btn btn-outline-danger btn-sm" href="<?= html_escape(site_url('reports/export') . '?report=age&format=pdf'); ?>">PDF</a>
                         </div>
                     </div>
@@ -139,9 +139,9 @@
                     <div class="card-body p-4">
                         <h2 class="h5 mb-3">Employee report</h2>
                         <p class="text-secondary mb-3">Export the separate employee records dataset.</p>
-                        <div class="btn-group flex-wrap" role="group" aria-label="Employee export options">
+                        <div class="btn-group flex-wrap report-export-group" role="group" aria-label="Employee export options">
                             <a class="btn btn-outline-success" href="<?= html_escape(site_url('reports/export') . '?report=employees&format=csv'); ?>">CSV</a>
-                            <a class="btn btn-outline-success" href="<?= html_escape(site_url('reports/export') . '?report=employees&format=xls'); ?>">Excel</a>
+                            <a class="btn btn-outline-success" href="<?= html_escape(site_url('reports/export') . '?report=employees&format=xlsx'); ?>">Excel</a>
                             <a class="btn btn-outline-danger" href="<?= html_escape(site_url('reports/export') . '?report=employees&format=pdf'); ?>">PDF</a>
                         </div>
                     </div>
