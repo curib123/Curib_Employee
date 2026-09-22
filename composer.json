@@ -6,7 +6,9 @@
   "license": "proprietary",
   "require": {
     "php": ">=7.4",
-    "codeigniter/framework": "~3.1.13"
+    "codeigniter/framework": "~3.1.13",
+    "dompdf/dompdf": "^2.0.8",
+    "phpoffice/phpspreadsheet": "^1.29.0"
   },
   "config": {
     "sort-packages": true
