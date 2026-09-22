@@ -13,12 +13,16 @@ class Users extends MY_Controller
     // This method displays a paginated list of users for management purposes. It retrieves the current page and per-page settings from GET parameters, calculates the total number of users, and fetches the corresponding user data from the User_model. The data is then passed to the 'users/index.php' view for rendering.
     public function index()
     {
-        $per_page = min(50, max(5, (int) $this->input->get('per_page')));
+        $allowed_page_sizes = array(10, 25, 50);
+        $requested_page_size = (int) $this->input->get('per_page');
+        $per_page = in_array($requested_page_size, $allowed_page_sizes, TRUE) ? $requested_page_size : 10;
         $page = max(1, (int) $this->input->get('page'));
         $user_search = trim((string) $this->input->get('search', TRUE));
         $user_age_range = (string) $this->input->get('age_range', TRUE);
-        $user_sort = (string) $this->input->get('sort', TRUE);
-        $user_direction = (string) $this->input->get('direction', TRUE);
+        $allowed_sorts = array('firstname', 'lastname', 'birthday', 'created_at');
+        $requested_sort = (string) $this->input->get('sort', TRUE);
+        $user_sort = in_array($requested_sort, $allowed_sorts, TRUE) ? $requested_sort : 'lastname';
+        $user_direction = strtoupper((string) $this->input->get('direction', TRUE)) === 'DESC' ? 'DESC' : 'ASC';
         $total = $this->User_model->count_management_users($user_search, $user_age_range);
         $total_pages = max(1, (int) ceil($total / $per_page));
         $page = min($page, $total_pages);
@@ -33,7 +37,7 @@ class Users extends MY_Controller
             'user_search' => $user_search,
             'user_age_range' => $user_age_range,
             'user_sort' => $user_sort,
-            'user_direction' => strtoupper($user_direction) === 'DESC' ? 'DESC' : 'ASC',
+            'user_direction' => $user_direction,
             'flash' => $this->session->flashdata('flash')
         ));
     }
