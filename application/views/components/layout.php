@@ -1,7 +1,7 @@
 <?php
 /**
- * application/views/components/top_nav.php | 2026-09-21
- * Shared Bootstrap top navigation for authenticated routes.
+ * application/views/components/layout.php
+ * Shared application shell for authenticated routes.
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -23,27 +23,44 @@ $active_nav = isset($page_titles[$active_nav]) && $active_nav !== '' ? $active_n
 $page_title = isset($page_titles[$active_nav]) ? $page_titles[$active_nav] : 'Curib Employee';
 ?>
 
+<link rel="stylesheet" href="<?= html_escape(base_url('assets/css/navigation.css?v=4')); ?>">
+<link rel="stylesheet" href="<?= html_escape(base_url('assets/css/app.css?v=1')); ?>">
 
-<link rel="stylesheet" href="<?= html_escape(base_url('assets/css/navigation.css?v=3')); ?>">
 <aside class="app-sidebar" aria-label="Main navigation">
     <a class="app-sidebar-brand" href="<?= html_escape(site_url('dashboard')); ?>">
-        <span class="badge rounded-3 text-bg-light text-primary fs-5 p-2" aria-hidden="true">C</span>
+        <span class="app-brand-mark" aria-hidden="true">C</span>
         <span>Curib Employee</span>
     </a>
 
     <div class="app-sidebar-label">Workspace</div>
     <nav class="app-sidebar-nav">
-        <a class="<?= $active_nav === 'dashboard' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('dashboard')); ?>" <?= $active_nav === 'dashboard' ? 'aria-current="page"' : ''; ?>>Dashboard</a>
-        <a class="<?= $active_nav === 'employees' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('employees')); ?>" <?= $active_nav === 'employees' ? 'aria-current="page"' : ''; ?>>Employees</a>
-        <a class="<?= $active_nav === 'users' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('users')); ?>" <?= $active_nav === 'users' ? 'aria-current="page"' : ''; ?>>Users</a>
-        <a class="<?= $active_nav === 'reports' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('reports')); ?>" <?= $active_nav === 'reports' ? 'aria-current="page"' : ''; ?>>Reports</a>
-        <a class="<?= $active_nav === 'account' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('account')); ?>" <?= $active_nav === 'account' ? 'aria-current="page"' : ''; ?>>Account</a>
+        <a class="<?= $active_nav === 'dashboard' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('dashboard')); ?>" <?= $active_nav === 'dashboard' ? 'aria-current="page"' : ''; ?>>
+            <svg class="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+            <span>Dashboard</span>
+        </a>
+        <a class="<?= $active_nav === 'employees' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('employees')); ?>" <?= $active_nav === 'employees' ? 'aria-current="page"' : ''; ?>>
+            <svg class="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Employees</span>
+        </a>
+        <a class="<?= $active_nav === 'users' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('users')); ?>" <?= $active_nav === 'users' ? 'aria-current="page"' : ''; ?>>
+            <svg class="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            <span>Users</span>
+        </a>
+        <a class="<?= $active_nav === 'reports' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('reports')); ?>" <?= $active_nav === 'reports' ? 'aria-current="page"' : ''; ?>>
+            <svg class="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19V3"/><path d="M2 21h20"/></svg>
+            <span>Reports</span>
+        </a>
+        <a class="<?= $active_nav === 'account' ? 'active is-active' : ''; ?>" href="<?= html_escape(site_url('account')); ?>" <?= $active_nav === 'account' ? 'aria-current="page"' : ''; ?>>
+            <svg class="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            <span>Account</span>
+        </a>
     </nav>
 
     <div class="app-sidebar-footer">
         <button type="button" class="btn btn-outline-light rounded-3" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
     </div>
 </aside>
+
 <header class="app-topbar">
     <h1><?= html_escape($page_title); ?></h1>
     <div class="app-topbar-user">
@@ -54,7 +71,7 @@ $page_title = isset($page_titles[$active_nav]) ? $page_titles[$active_nav] : 'Cu
         <?php endif; ?>
         <div>
             <strong><?= html_escape($full_name); ?></strong>
-            <span><?= html_escape($current_user['email']); ?></span>
+            <span><?= html_escape(isset($current_user['email']) ? $current_user['email'] : ''); ?></span>
         </div>
     </div>
 </header>
