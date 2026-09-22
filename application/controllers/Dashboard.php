@@ -16,6 +16,9 @@ class Dashboard extends MY_Controller
 
     public function index()
     {
+        $year_start = date('Y-01-01 00:00:00');
+        $next_year_start = date('Y-01-01 00:00:00', strtotime('+1 year'));
+
         $data = array(
             'current_user' => $this->current_user,
             'employee_count' => $this->Employee_model->count_all(),
@@ -25,6 +28,7 @@ class Dashboard extends MY_Controller
             'age_statistics' => $this->User_model->age_statistics(),
             'age_breakdown' => $this->User_model->age_breakdown(),
             'address_statistics' => $this->User_model->address_statistics(),
+            'monthly_registration_statistics' => $this->User_model->get_monthly_registration_report($year_start, $next_year_start),
             'flash' => $this->session->flashdata('flash'),
             'validation_errors' => $this->session->flashdata('password_validation_errors') ?: array(),
             'show_first_login_password_prompt' => (bool) $this->session->userdata('user_password_prompt_pending')
