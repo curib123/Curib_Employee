@@ -42,7 +42,7 @@ $reopen_modal = $show_first_login_password_prompt
                     <p class="lead text-light mb-0">Monitor users, employees, and registration activity.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end">
-                    <a href="<?= html_escape(site_url('employees')); ?>" class="btn btn-light btn-lg rounded-3 px-3 m-1">
+                    <a href="<?= html_escape(site_url('employees')); ?>" class="btn btn-secondary btn-lg rounded-3 px-3 m-1">
                         Manage Employees
                     </a>
                     <a href="<?= html_escape(site_url('reports')); ?>" class="btn btn-outline-light btn-lg rounded-3 px-3 m-1">View Reports</a>

@@ -24,7 +24,7 @@ $modal_id = 0;
 					<h1 class="h2 fw-bold text-light mb-1">Users</h1>
 					<p class="text-light mb-0">Manage registered accounts separately from employees.</p>
 				</div>
-				<button type="button" class="btn btn-light btn-lg rounded-3 px-4 align-self-md-center" data-bs-toggle="modal" data-bs-target="#userModal" data-user-mode="create">Register User</button>
+				<button type="button" class="btn btn-secondary btn-lg rounded-3 px-4 align-self-md-center" data-bs-toggle="modal" data-bs-target="#userModal" data-user-mode="create">Register User</button>
 			</div>
 		</div>
 
