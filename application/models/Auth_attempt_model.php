@@ -9,6 +9,7 @@ class Auth_attempt_model extends CI_Model
 {
     private $table = 'login_attempts';
 
+    // Retrieve the current state of login attempts for a given identifier and IP address
     public function get_state($identifier_hash, $ip_address)
     {
         return $this->db
@@ -20,7 +21,8 @@ class Auth_attempt_model extends CI_Model
             ->get()
             ->row_array();
     }
-
+  
+    // Record a failed login attempt for a given identifier and IP address, applying throttling rules
     public function record_failure($identifier_hash, $ip_address, $max_attempts, $window_seconds, $lock_seconds)
     {
         $now = time();
@@ -54,6 +56,7 @@ class Auth_attempt_model extends CI_Model
         return $this->db->insert($this->table, $data);
     }
 
+    // Clear the login attempt record for a given identifier and IP address
     public function clear($identifier_hash, $ip_address)
     {
         return $this->db
@@ -62,6 +65,7 @@ class Auth_attempt_model extends CI_Model
             ->delete($this->table);
     }
 
+    // Remove stale login attempt records that are older than the specified cutoff timestamp
     public function cleanup_stale($cutoff_timestamp)
     {
         return $this->db

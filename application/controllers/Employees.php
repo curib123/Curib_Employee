@@ -15,6 +15,7 @@ class Employees extends MY_Controller
         $this->load->library('form_validation');
     }
 
+    // This method displays a paginated list of employees, allowing for filtering, sorting, and searching. It retrieves the necessary data from the Employee_model and prepares it for the view.
     public function index()
     {
         $search = trim((string) $this->input->get('search', TRUE));
@@ -56,7 +57,7 @@ class Employees extends MY_Controller
 
         $this->load->view('employees/index.html', $data);
     }
-
+   // This method handles the creation of a new employee record. It checks if the request is a POST request, validates the input data, and attempts to insert the new employee into the database. It sets appropriate flash messages based on the outcome and redirects back to the employees list.
     public function store()
     {
         $this->require_post();
@@ -82,7 +83,7 @@ class Employees extends MY_Controller
 
         redirect('employees');
     }
-
+   // This method handles the deletion of an employee record. It checks if the request is a POST request, validates the employee ID, and attempts to delete the employee from the database. It sets appropriate flash messages based on the outcome and redirects back to the employees list.
     public function update($id)
     {
         $this->require_post();
@@ -118,6 +119,7 @@ class Employees extends MY_Controller
         redirect('employees');
     }
 
+    // This method deletes an employee record based on the provided ID, ensuring that the request is a POST request and that the employee exists before attempting deletion. It sets appropriate flash messages based on the outcome of the operation.
     public function delete($id)
     {
         $this->require_post();
@@ -143,6 +145,7 @@ class Employees extends MY_Controller
         redirect('employees');
     }
 
+    // This method checks if the provided name is valid, allowing letters, spaces, apostrophes, periods, and hyphens only.
     public function valid_name($name)
     {
         $name = trim((string) $name);
@@ -159,6 +162,7 @@ class Employees extends MY_Controller
         return TRUE;
     }
 
+    // This method checks if the provided birthday is a valid date, ensuring it is not in the future and is on or after January 1, 1900.
     public function valid_birthday($birthday)
     {
         $birthday = trim((string) $birthday);
@@ -192,6 +196,7 @@ class Employees extends MY_Controller
         return TRUE;
     }
 
+    // This method checks if the provided contact number is valid, ensuring it contains only allowed characters and has a digit count between 7 and 15.
     public function valid_contactno($contactno)
     {
         $contactno = trim((string) $contactno);
@@ -218,7 +223,7 @@ class Employees extends MY_Controller
 
         return TRUE;
     }
-
+   // This method sets the validation rules for employee data, ensuring that each field meets specific criteria for format and length.
     private function set_validation_rules()
     {
         $this->form_validation->set_rules(
@@ -247,7 +252,7 @@ class Employees extends MY_Controller
             'trim|required|max_length[20]|callback_valid_contactno'
         );
     }
-
+     // This method retrieves the employee data from the POST request, sanitizes it, and returns it as an associative array.
     private function employee_payload()
     {
         return array(
@@ -258,7 +263,7 @@ class Employees extends MY_Controller
             'contactno' => trim((string) $this->input->post('contactno', TRUE))
         );
     }
-
+    // This method preserves the validation state by storing validation errors, old input, and context in flash data for the next request.
     private function preserve_validation_state($mode, $id, $payload)
     {
         $this->session->set_flashdata('validation_errors', $this->form_validation->error_array());
@@ -268,7 +273,7 @@ class Employees extends MY_Controller
             'id' => $id
         ));
     }
-
+    // This method calculates the age based on the provided birthday, returning 0 if the date is invalid.
     private function calculate_age($birthday)
     {
         try

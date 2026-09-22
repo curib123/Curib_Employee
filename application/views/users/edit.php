@@ -3,8 +3,8 @@
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Edit User | Curib Employee</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"></head>
 <body class="bg-body-tertiary">
-<?php $this->load->view('components/top_nav.php'); ?>
-<main class="container py-4 py-lg-5">
+<?php $this->load->view('components/layout.php'); ?>
+<main class="app-main container py-4 py-lg-5">
     <div class="card border-0 bg-primary shadow-lg rounded-4 mb-4"><div class="card-body p-4"><span class="badge rounded-pill text-light mb-2">User Management</span><h1 class="h2 fw-bold text-light mb-1">Edit User</h1><p class="text-light mb-0">Update account information.</p></div></div>
     <section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4 p-lg-5">
         <?= form_open('users/update/' . (int) $user['Id'], array('class' => 'needs-validation', 'novalidate' => 'novalidate')); ?>

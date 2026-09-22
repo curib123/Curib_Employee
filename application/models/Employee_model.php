@@ -9,6 +9,8 @@ class Employee_model extends CI_Model
 {
     private $table = 'employee';
 
+
+    // Retrieve a paginated list of employees with optional search, age range, address filters, and sorting
     public function get_page($search, $age_range, $address, $sort, $direction, $page, $per_page)
     {
         $this->apply_filters($search, $age_range, $address);
@@ -34,12 +36,14 @@ class Employee_model extends CI_Model
             ->result_array();
     }
 
+    // Count the total number of employees matching the optional search, age range, and address filters
     public function count_filtered($search, $age_range, $address)
     {
         $this->apply_filters($search, $age_range, $address);
         return $this->db->count_all_results($this->table);
     }
 
+    // Retrieve a single employee record by its ID
     public function find($id)
     {
         return $this->db
@@ -51,6 +55,7 @@ class Employee_model extends CI_Model
             ->row_array();
     }
 
+    // Retrieve all employee records for reporting purposes
     public function get_report()
     {
         return $this->db->select('Id, firstname, lastname, birthday, address, contactno')
@@ -61,11 +66,13 @@ class Employee_model extends CI_Model
             ->result_array();
     }
 
+    // Count the total number of employee records in the table
     public function count_all()
     {
         return $this->db->count_all($this->table);
     }
 
+    // Private helper method to apply search, age range, and address filters to the query
     private function apply_filters($search, $age_range, $address)
     {
         $search = trim((string) $search);
@@ -101,11 +108,13 @@ class Employee_model extends CI_Model
         }
     }
 
+    // Insert a new employee record into the table
     public function insert($data)
     {
         return $this->db->insert($this->table, $data);
     }
 
+    // Update an existing employee record by its ID
     public function update($id, $data)
     {
         return $this->db
@@ -113,6 +122,7 @@ class Employee_model extends CI_Model
             ->update($this->table, $data);
     }
 
+    // Delete an employee record by its ID
     public function delete($id)
     {
         return $this->db

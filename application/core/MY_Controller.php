@@ -20,6 +20,19 @@ class MY_Controller extends CI_Controller
 
         if (!$this->session->userdata('logged_in'))
         {
+            $requested_path = (string) $this->uri->uri_string();
+            $query_string = (string) $this->input->server('QUERY_STRING');
+
+            if ($query_string !== '')
+            {
+                $requested_path .= '?' . $query_string;
+            }
+
+            if ($this->uri->uri_string() !== 'login' && $this->uri->uri_string() !== 'register')
+            {
+                $this->session->set_userdata('redirect_after_login', $requested_path);
+            }
+
             $this->session->set_flashdata('flash', array(
                 'type' => 'warning',
                 'message' => 'Please sign in to continue.'
@@ -44,6 +57,7 @@ class MY_Controller extends CI_Controller
      
     }
 
+    // Check if the current user is an admin
     protected function require_post()
     {
         if (strtoupper($this->input->method()) !== 'POST')
@@ -52,6 +66,7 @@ class MY_Controller extends CI_Controller
         }
     }
 
+    // Set a flash message for the next request
     protected function set_flash($type, $message)
     {
         $allowed_types = array('success', 'danger', 'warning', 'info');

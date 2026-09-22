@@ -28,9 +28,9 @@ $reopen_modal = $show_first_login_password_prompt
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body class="bg-body-tertiary">
-    <?php $this->load->view('components/top_nav.php'); ?>
+    <?php $this->load->view('components/layout.php'); ?>
 
-    <main class="container py-4 py-lg-5">
+    <main class="app-main container py-4 py-lg-5">
         <section class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-primary">
             <div class="card-body p-4 p-lg-5">
             <div class="row align-items-center g-3">
@@ -51,15 +51,18 @@ $reopen_modal = $show_first_login_password_prompt
             </div>
         </section>
 
-        <div class="row g-4 mt-4">
-            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All accounts</p></div></section></div>
-            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Employees</p><div class="display-5 fw-bold"><?= (int) $employee_count; ?></div><p class="text-secondary mb-0">Active records</p></div></section></div>
-            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New today</p><div class="display-5 fw-bold"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
-            <div class="col-6 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New this month</p><div class="display-5 fw-bold"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
-            <div class="col-12 col-xl"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Average age</p><div class="display-6 fw-bold"><?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Range <?= (int) $age_statistics['youngest_age']; ?>-<?= (int) $age_statistics['oldest_age']; ?></p></div></section></div>
-            <div class="col-lg-6"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><h2 class="h5 mb-3">Users by age range</h2><div style="height: 300px"><canvas id="ageBreakdownChart" aria-label="Users by age range chart"></canvas></div></div></section></div>
-            <div class="col-lg-6"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><h2 class="h5 mb-3">Monthly registrations</h2><div style="height: 300px"><canvas id="monthlyRegistrationsChart" aria-label="Monthly registrations chart"></canvas></div></div></section></div>
-            <div class="col-12"><section class="card border-0 shadow-lg rounded-4"><div class="card-body p-4"><h2 class="h5 mb-3">Users by address</h2><div style="height: 320px"><canvas id="addressStatisticsChart" aria-label="Users by address chart"></canvas></div></div></section></div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-5 g-3 mb-4">
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Registered users</p><div class="display-5 fw-bold"><?= (int) $registered_user_count; ?></div><p class="text-secondary mb-0">All accounts</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Employees</p><div class="display-5 fw-bold"><?= (int) $employee_count; ?></div><p class="text-secondary mb-0">Active records</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New today</p><div class="display-5 fw-bold"><?= (int) $new_users_today; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">New this month</p><div class="display-5 fw-bold"><?= (int) $new_users_month; ?></div><p class="text-secondary mb-0">User accounts</p></div></section></div>
+            <div class="col"><section class="card border-0 shadow-lg rounded-4 h-100"><div class="card-body p-4"><p class="text-uppercase small fw-semibold text-secondary mb-2">Average age</p><div class="display-6 fw-bold"><?= html_escape(number_format((float) $age_statistics['average_age'], 1)); ?></div><p class="text-secondary mb-0">Range <?= (int) $age_statistics['youngest_age']; ?>-<?= (int) $age_statistics['oldest_age']; ?></p></div></section></div>
+        </div>
+
+        <div class="dashboard-chart-grid">
+            <section class="dashboard-chart-panel"><h2 class="h5 mb-3">Users by age range</h2><div class="dashboard-chart dashboard-chart-pie"><canvas id="ageBreakdownChart" aria-label="Users by age range chart"></canvas></div></section>
+            <section class="dashboard-chart-panel"><h2 class="h5 mb-3">Monthly registrations</h2><div class="dashboard-chart"><canvas id="monthlyRegistrationsChart" aria-label="Monthly registrations chart"></canvas></div></section>
+            <section class="dashboard-chart-panel dashboard-chart-panel-wide"><h2 class="h5 mb-3">Users by address</h2><div class="dashboard-chart dashboard-chart-address"><canvas id="addressStatisticsChart" aria-label="Users by address chart"></canvas></div></section>
         </div>
     </main>
 

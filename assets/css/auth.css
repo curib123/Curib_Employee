@@ -18,7 +18,7 @@
   content: "";
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, rgba(30, 31, 32, 0.88), rgba(41, 43, 44, 0.72));
+  background: linear-gradient(135deg, rgba(14, 15, 15, 0.88), rgba(31, 32, 32, 0.72));
   pointer-events: none;
   z-index: 0;
 }

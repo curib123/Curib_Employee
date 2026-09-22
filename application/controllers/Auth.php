@@ -130,9 +130,18 @@ class Auth extends CI_Controller
 
         $this->start_authenticated_session($user);
 
+        $return_to = $this->normalize_redirect_target($this->session->userdata('redirect_after_login'));
+        $this->session->unset_userdata('redirect_after_login');
+
         if ((int) $user['must_change_password'] !== 1)
         {
             $this->set_flash('success', 'Welcome back, ' . $user['firstname'] . '.' );
+        }
+
+        if ($return_to !== '')
+        {
+            redirect($return_to);
+            return;
         }
 
         redirect('dashboard');
@@ -235,7 +244,7 @@ class Auth extends CI_Controller
     }
 
    
-   
+   // This method generates a secure random password of the specified length, ensuring it contains uppercase, lowercase, numeric, and special characters.
     public function change_password()
     {
         $this->require_post();
@@ -364,7 +373,7 @@ class Auth extends CI_Controller
         $this->session->sess_destroy();
         redirect('login');
     }
-
+    // This method ensures that the current request is a POST request, returning a 405 error if it is not.
     public function valid_name($name)
     {
         $name = trim((string) $name);
@@ -380,7 +389,7 @@ class Auth extends CI_Controller
 
         return TRUE;
     }
-
+   // This method checks if the provided birthday is a valid date, ensuring it is not in the future and is on or after January 1, 1900.
     public function valid_birthday($birthday)
     {
         $birthday = trim((string) $birthday);
@@ -414,6 +423,7 @@ class Auth extends CI_Controller
         return TRUE;
     }
 
+    // This method checks if the provided contact number is valid, ensuring it contains only allowed characters and has a digit count between 7 and 15.
     public function valid_contactno($contactno)
     {
         $contactno = trim((string) $contactno);
@@ -441,6 +451,7 @@ class Auth extends CI_Controller
         return TRUE;
     }
 
+    // This method checks if the provided email address is unique in the system, returning a validation error if it already exists.
     public function unique_email($email)
     {
         if ($this->User_model->email_exists($email))
@@ -451,7 +462,8 @@ class Auth extends CI_Controller
 
         return TRUE;
     }
-
+   
+    // This method generates a secure random password of the specified length, ensuring it contains uppercase, lowercase, numeric, and special characters.
     public function strong_password($password)
     {
         $password = (string) $password;
@@ -473,7 +485,7 @@ class Auth extends CI_Controller
 
         return TRUE;
     }
-
+   // This method ensures that the current request is a POST request, returning a 405 error if it is not.
     private function set_registration_rules()
     {
         $this->form_validation->set_rules(
@@ -507,7 +519,7 @@ class Auth extends CI_Controller
             'trim|required|valid_email|max_length[190]|callback_unique_email'
         );
     }
-
+    // This method ensures that the current request is a POST request, returning a 405 error if it is not.
     private function registration_payload()
     {
         return array(
@@ -520,11 +532,18 @@ class Auth extends CI_Controller
         );
     }
 
+    // This method ensures that the current request is a POST request, returning a 405 error if it is not.
     private function upload_registration_picture()
     {
         if (!isset($_FILES['profile_picture']) || (int) $_FILES['profile_picture']['error'] === UPLOAD_ERR_NO_FILE)
         {
             return NULL;
+        }
+
+        if (!$this->is_valid_profile_image($_FILES['profile_picture']))
+        {
+            $this->set_flash('danger', $this->profile_picture_error($_FILES['profile_picture']));
+            return FALSE;
         }
 
         $upload_path = FCPATH . 'uploads/profile/';
@@ -537,23 +556,58 @@ class Auth extends CI_Controller
 
         $this->load->library('upload', array(
             'upload_path' => $upload_path,
-            'allowed_types' => 'jpg|jpeg|png|webp',
+            'allowed_types' => '*',
             'max_size' => 2048,
             'max_width' => 2000,
             'max_height' => 2000,
+            'detect_mime' => FALSE,
             'encrypt_name' => TRUE,
             'remove_spaces' => TRUE
         ));
 
         if (!$this->upload->do_upload('profile_picture'))
         {
-            $this->set_flash('danger', strip_tags($this->upload->display_errors('', '')));
+            $this->set_flash('danger', 'The profile picture could not be saved. Please try again with a JPG, PNG, or WebP image up to 2 MB.');
             return FALSE;
         }
 
         return 'uploads/profile/' . $this->upload->data('file_name');
     }
 
+    // This method checks if the uploaded profile picture is valid, ensuring it meets size, dimension, and MIME type requirements.
+    private function is_valid_profile_image($file)
+    {
+        if ((int) $file['error'] !== UPLOAD_ERR_OK || (int) $file['size'] > 2097152)
+        {
+            return FALSE;
+        }
+
+        $image = @getimagesize($file['tmp_name']);
+        $allowed_mimes = array('image/jpeg', 'image/png', 'image/webp');
+
+        return $image !== FALSE
+            && isset($image['mime'])
+            && in_array($image['mime'], $allowed_mimes, TRUE)
+            && (int) $image[0] <= 2000
+            && (int) $image[1] <= 2000;
+    }
+
+    // This method returns a user-friendly error message based on the file upload error code.
+    private function profile_picture_error($file)
+    {
+        $messages = array(
+            UPLOAD_ERR_INI_SIZE => 'The profile picture is larger than the server upload limit.',
+            UPLOAD_ERR_FORM_SIZE => 'The profile picture is larger than the allowed 2 MB limit.',
+            UPLOAD_ERR_PARTIAL => 'The profile picture upload was interrupted. Please try again.',
+            UPLOAD_ERR_NO_TMP_DIR => 'The server could not prepare the upload. Please contact support.',
+            UPLOAD_ERR_CANT_WRITE => 'The server could not save the upload. Please contact support.',
+            UPLOAD_ERR_EXTENSION => 'The server blocked the profile picture upload. Please try again.'
+        );
+        $error = isset($file['error']) ? (int) $file['error'] : UPLOAD_ERR_NO_FILE;
+        return isset($messages[$error]) ? $messages[$error] : 'Use a valid JPG, PNG, or WebP image up to 2 MB and 2000 x 2000 pixels.';
+    }
+
+    // This method generates a secure random password of the specified length, ensuring it contains uppercase, lowercase, numeric, and special characters.
     private function generate_password($length)
     {
         $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%*?';
@@ -579,6 +633,7 @@ class Auth extends CI_Controller
         return $password;
     }
 
+    // This method starts an authenticated session for the user, storing their information in the session and regenerating the session ID for security.
     private function start_authenticated_session($user)
     {
 
@@ -601,6 +656,7 @@ class Auth extends CI_Controller
         ));
     }
 
+    // This method ensures that the current user is authenticated, redirecting to the login page if they are not.
     private function set_flash($type, $message)
     {
         $allowed_types = array('success', 'danger', 'warning', 'info');
@@ -611,15 +667,67 @@ class Auth extends CI_Controller
         ));
     }
 
+    // This method ensures that the current user is authenticated, redirecting to the login page if they are not.
     private function require_authenticated_user()
     {
         if (!$this->session->userdata('logged_in'))
         {
+            $this->session->set_userdata('redirect_after_login', 'dashboard');
             redirect('login');
             exit;
         }
     }
 
+    private function normalize_redirect_target($return_to)
+    {
+        $return_to = trim((string) $return_to);
+
+        if ($return_to === '')
+        {
+            return '';
+        }
+
+        if (preg_match('/^https?:\/\//i', $return_to))
+        {
+            $target_host = parse_url($return_to, PHP_URL_HOST);
+            $base_host = parse_url(base_url(), PHP_URL_HOST);
+
+            if (!is_string($base_host) || !is_string($target_host) || strtolower($base_host) !== strtolower($target_host))
+            {
+                return '';
+            }
+
+            $path = parse_url($return_to, PHP_URL_PATH);
+            $base_path = trim((string) parse_url(base_url(), PHP_URL_PATH), '/');
+            $normalized_path = $path === false || $path === null || $path === '' ? '/' : $path;
+
+            if ($base_path !== '')
+            {
+                $base_prefix = '/' . $base_path;
+                if (strpos($normalized_path, $base_prefix) === 0)
+                {
+                    $normalized_path = substr($normalized_path, strlen($base_prefix));
+                }
+            }
+
+            $normalized_path = '/' . ltrim((string) $normalized_path, '/');
+            $relative_path = $normalized_path === '/' ? 'dashboard' : ltrim($normalized_path, '/');
+            $query = parse_url($return_to, PHP_URL_QUERY);
+
+            return $query !== '' && $query !== null ? $relative_path . '?' . $query : $relative_path;
+        }
+
+        if (strpos($return_to, '://') !== FALSE || strpos($return_to, '//') === 0)
+        {
+            return '';
+        }
+
+        $return_to = ltrim($return_to, '/');
+
+        return $return_to !== '' ? $return_to : '';
+    }
+
+    // This method ensures that the current request is a POST request, returning a 405 error if it is not.
     private function require_post()
     {
         if (strtoupper($this->input->method()) !== 'POST')
@@ -628,6 +736,7 @@ class Auth extends CI_Controller
         }
     }
 
+    // This method calculates the age of a user based on their birthday. It returns the age in years or 0 if the birthday is invalid.
     private function calculate_age($birthday){
 
          try

@@ -5,7 +5,13 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$home_url = function_exists('site_url') ? site_url() : '/';
+$script_name = isset($_SERVER['SCRIPT_NAME']) ? (string) $_SERVER['SCRIPT_NAME'] : '/index.php';
+$base_path = str_replace('\\', '/', dirname($script_name));
+$base_path = rtrim($base_path, '/');
+$base_path = $base_path === '/' || $base_path === '.' ? '' : $base_path;
+$scheme = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off') ? 'https' : 'http';
+$host = isset($_SERVER['HTTP_HOST']) ? preg_replace('/[^A-Za-z0-9.\-:\[\]]/', '', (string) $_SERVER['HTTP_HOST']) : 'localhost';
+$home_url = $scheme . '://' . $host . $base_path . '/dashboard';
 $safe_home_url = htmlspecialchars((string) $home_url, ENT_QUOTES, 'UTF-8');
 
 $safe_message = htmlspecialchars(strip_tags((string) $message), ENT_QUOTES, 'UTF-8');

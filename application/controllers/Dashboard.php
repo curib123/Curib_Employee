@@ -13,7 +13,8 @@ class Dashboard extends MY_Controller
         $this->load->model('Employee_model');
         $this->load->model('User_model');
     }
-
+     
+    // This method displays the main dashboard for authenticated users. It gathers various statistics and data related to employees and registered users, including counts, age statistics, address statistics, and monthly registration reports. The data is then passed to the 'dashboard/index.php' view for rendering.
     public function index()
     {
         $year_start = date('Y-01-01 00:00:00');

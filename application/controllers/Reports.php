@@ -10,6 +10,7 @@ class Reports extends MY_Controller
         $this->load->model('Employee_model');
     }
 
+    // This method displays the reports page, showing registration counts, monthly registration data, and age statistics for users. It retrieves the necessary data from the User_model and prepares it for the view.
     public function index()
     {
         list($start, $end) = $this->date_range();
@@ -25,7 +26,8 @@ class Reports extends MY_Controller
         );
         $this->load->view('reports/index.php', $data);
     }
-
+ 
+    // This method handles the export of various reports in different formats (CSV, XLS, PDF). It retrieves the requested report data based on the specified date range and prepares it for download in the chosen format. The method supports registration reports, monthly registration reports, age statistics reports, and employee reports.
     public function export()
     {
         $report = (string) $this->input->get('report', TRUE);
@@ -60,6 +62,7 @@ class Reports extends MY_Controller
         }
     }
 
+    // This method retrieves registration report data from the User_model for a specified date range and formats it into an array of rows suitable for export. Each row contains user details such as ID, first name, last name, email, birthday, address, contact number, and registration date.
     private function registration_rows($start, $end)
     {
         $rows = array();
@@ -70,6 +73,7 @@ class Reports extends MY_Controller
         return $rows;
     }
 
+    // This method retrieves monthly registration report data from the User_model for a specified date range and formats it into an array of rows suitable for export. Each row contains the registration month and the total number of registrations for that month.
     private function monthly_rows($start, $end)
     {
         $rows = array();
@@ -80,6 +84,7 @@ class Reports extends MY_Controller
         return $rows;
     }
 
+    // This method retrieves age statistics report data from the User_model and formats it into an array of rows suitable for export. Each row contains an age range and the total number of users in that range.
     private function age_rows()
     {
         $rows = array();
@@ -90,6 +95,7 @@ class Reports extends MY_Controller
         return $rows;
     }
 
+    // This method retrieves employee report data from the Employee_model and formats it into an array of rows suitable for export. Each row contains employee details such as ID, first name, last name, birthday, address, and contact number.
     private function employee_rows()
     {
         $rows = array();
@@ -100,6 +106,7 @@ class Reports extends MY_Controller
         return $rows;
     }
 
+    // This method handles the download of a CSV file containing the specified report data. It sets the appropriate headers for CSV content and outputs the data in CSV format, including headers and rows.
     private function download_csv($filename, $data)
     {
         $this->output->set_content_type('text/csv')->set_header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -109,6 +116,7 @@ class Reports extends MY_Controller
         fclose($handle);
     }
 
+    // This method handles the download of an XLS file containing the specified report data. It generates an HTML table representation of the data and sets the appropriate headers for Excel content, allowing the user to download the report in XLS format.
     private function download_xls($filename, $data)
     {
         $html = '<table><tr><th>' . implode('</th><th>', array_map('html_escape', $data['headers'])) . '</th></tr>';
@@ -117,6 +125,7 @@ class Reports extends MY_Controller
         $this->output->set_content_type('application/vnd.ms-excel')->set_header('Content-Disposition: attachment; filename="' . $filename . '"')->set_output($html);
     }
 
+    // This method handles the download of a PDF file containing the specified report data. It generates a simple text-based PDF representation of the data and sets the appropriate headers for PDF content, allowing the user to download the report in PDF format.
     private function download_pdf($filename, $data)
     {
         $lines = array($data['title'], '');
@@ -126,6 +135,7 @@ class Reports extends MY_Controller
         $this->output->set_content_type('application/pdf')->set_header('Content-Disposition: attachment; filename="' . $filename . '"')->set_output($pdf);
     }
 
+    // This method generates a simple text-based PDF stream from an array of lines. It constructs the PDF structure, including the catalog, pages, and font resources, and returns the complete PDF content as a string.
     private function make_text_pdf($lines)
     {
         $stream = "BT\n/F1 9 Tf\n40 800 Td\n";
@@ -145,6 +155,7 @@ class Reports extends MY_Controller
         return $pdf . "trailer\n<< /Size " . count($objects) . " /Root 1 0 R >>\nstartxref\n" . $xref . "\n%%EOF";
     }
 
+    // This method retrieves and validates a date input from the GET parameters, returning it in 'Y-m-d' format or falling back to a default value if the input is invalid or missing.
     private function date_input($key, $fallback)
     {
         $value = trim((string) $this->input->get($key, TRUE));
@@ -152,6 +163,7 @@ class Reports extends MY_Controller
         return $date && DateTimeImmutable::getLastErrors() === FALSE ? $date->format('Y-m-d') : $fallback;
     }
 
+    // This method determines the date range for reports based on GET parameters, ensuring that the start date is not after the end date. It returns an array containing the validated start and end dates in 'Y-m-d' format.
     private function date_range()
     {
         $default_start = date('Y-m-01');

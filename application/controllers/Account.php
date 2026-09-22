@@ -10,6 +10,7 @@ class Account extends MY_Controller
         $this->load->library('form_validation');
     }
 
+    // This method displays the account management page with the current user's information and any flash messages.
     public function index()
     {
         $data = array(
@@ -116,19 +117,27 @@ class Account extends MY_Controller
             return;
         }
 
+        if (!isset($_FILES['profile_picture']) || !$this->is_valid_profile_image($_FILES['profile_picture']))
+        {
+            $this->set_flash('danger', isset($_FILES['profile_picture']) ? $this->profile_picture_error($_FILES['profile_picture']) : 'Choose a profile picture before uploading.');
+            redirect('account');
+            return;
+        }
+
         $this->load->library('upload', array(
             'upload_path' => $upload_path,
-            'allowed_types' => 'jpg|jpeg|png|webp',
+            'allowed_types' => '*',
             'max_size' => 2048,
             'max_width' => 2000,
             'max_height' => 2000,
+            'detect_mime' => FALSE,
             'encrypt_name' => TRUE,
             'remove_spaces' => TRUE
         ));
 
         if (!$this->upload->do_upload('profile_picture'))
         {
-            $this->set_flash('danger', strip_tags($this->upload->display_errors('', '')));
+            $this->set_flash('danger', 'The profile picture could not be saved. Please try again with a JPG, PNG, or WebP image up to 2 MB.');
             redirect('account');
             return;
         }
@@ -154,6 +163,39 @@ class Account extends MY_Controller
         $this->session->set_userdata('user_profile_picture', $path);
         $this->set_flash('success', 'Profile picture updated successfully.');
         redirect('account');
+    }
+
+    // This method handles the profile picture removal form submission.
+    private function is_valid_profile_image($file)
+    {
+        if ((int) $file['error'] !== UPLOAD_ERR_OK || (int) $file['size'] > 2097152)
+        {
+            return FALSE;
+        }
+
+        $image = @getimagesize($file['tmp_name']);
+        $allowed_mimes = array('image/jpeg', 'image/png', 'image/webp');
+
+        return $image !== FALSE
+            && isset($image['mime'])
+            && in_array($image['mime'], $allowed_mimes, TRUE)
+            && (int) $image[0] <= 2000
+            && (int) $image[1] <= 2000;
+    }
+
+    // This method returns a user-friendly error message based on the file upload error code.
+    private function profile_picture_error($file)
+    {
+        $messages = array(
+            UPLOAD_ERR_INI_SIZE => 'The profile picture is larger than the server upload limit.',
+            UPLOAD_ERR_FORM_SIZE => 'The profile picture is larger than the allowed 2 MB limit.',
+            UPLOAD_ERR_PARTIAL => 'The profile picture upload was interrupted. Please try again.',
+            UPLOAD_ERR_NO_TMP_DIR => 'The server could not prepare the upload. Please contact support.',
+            UPLOAD_ERR_CANT_WRITE => 'The server could not save the upload. Please contact support.',
+            UPLOAD_ERR_EXTENSION => 'The server blocked the profile picture upload. Please try again.'
+        );
+        $error = isset($file['error']) ? (int) $file['error'] : UPLOAD_ERR_NO_FILE;
+        return isset($messages[$error]) ? $messages[$error] : 'Use a valid JPG, PNG, or WebP image up to 2 MB and 2000 x 2000 pixels.';
     }
 
    
