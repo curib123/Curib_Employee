@@ -40,13 +40,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                         <div class="col-md-6">
                             <label for="userBirthday" class="form-label">Birthday</label>
-                            <input type="date" class="form-control form-control-lg" id="userBirthday" name="birthday" max="<?= html_escape(date('Y-m-d')); ?>" required>
+                            <input type="date" class="form-control form-control-lg" id="userBirthday" name="birthday" min="1900-01-01" max="<?= html_escape(date('Y-m-d')); ?>" required>
                             <div class="invalid-feedback">Birthday is required.</div>
                         </div>
 
                         <div class="col-md-6">
                             <label for="userContact" class="form-label">Contact No.</label>
-                            <input type="tel" class="form-control form-control-lg" id="userContact" name="contactno" maxlength="20" required>
+                            <input type="tel" class="form-control form-control-lg" id="userContact" name="contactno" maxlength="20" pattern="[0-9+()\-\s]{7,20}" inputmode="tel" autocomplete="tel" required>
                             <div class="invalid-feedback">Contact number is required.</div>
                         </div>
 
