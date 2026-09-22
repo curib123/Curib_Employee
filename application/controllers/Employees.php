@@ -20,9 +20,13 @@ class Employees extends MY_Controller
     {
         $search = trim((string) $this->input->get('search', TRUE));
         $age_range = (string) $this->input->get('age_range', TRUE);
-        $sort = (string) $this->input->get('sort', TRUE);
-        $direction = (string) $this->input->get('direction', TRUE);
-        $per_page = min(50, max(5, (int) $this->input->get('per_page')));
+        $allowed_sorts = array('firstname', 'lastname', 'birthday', 'address', 'contactno');
+        $requested_sort = (string) $this->input->get('sort', TRUE);
+        $sort = in_array($requested_sort, $allowed_sorts, TRUE) ? $requested_sort : 'lastname';
+        $direction = strtoupper((string) $this->input->get('direction', TRUE)) === 'DESC' ? 'DESC' : 'ASC';
+        $allowed_page_sizes = array(10, 25, 50);
+        $requested_page_size = (int) $this->input->get('per_page');
+        $per_page = in_array($requested_page_size, $allowed_page_sizes, TRUE) ? $requested_page_size : 10;
         $page = max(1, (int) $this->input->get('page'));
         $total = $this->Employee_model->count_filtered($search, $age_range);
         $total_pages = max(1, (int) ceil($total / $per_page));
@@ -42,7 +46,7 @@ class Employees extends MY_Controller
             'employee_search' => $search,
             'employee_age_range' => $age_range,
             'employee_sort' => $sort,
-            'employee_direction' => strtoupper($direction) === 'DESC' ? 'DESC' : 'ASC',
+            'employee_direction' => $direction,
             'employee_page' => $page,
             'employee_per_page' => $per_page,
             'employee_total_pages' => $total_pages,
