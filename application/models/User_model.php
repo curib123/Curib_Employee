@@ -69,13 +69,6 @@ class User_model extends CI_Model
 
             return $this->db->select('Id, firstname, lastname, email, birthday, address, contactno, created_at, must_change_password')
                 ->from($this->table)
-                ->group_start()
-                ->like('firstname', $search)
-                ->or_like('lastname', $search)
-                ->or_like('email', $search)
-                ->or_like('address', $search)
-                ->or_like('contactno', $search)
-                ->group_end()
                 ->order_by('CASE WHEN Id = ' . (int) $current_user_id . ' THEN 0 ELSE 1 END', '', FALSE)
                 ->order_by($sort_column, $direction)
                 ->order_by('firstname', 'ASC')
@@ -90,18 +83,24 @@ class User_model extends CI_Model
             $this->apply_management_filters($search, $age_range);
             return $this->db
                 ->from($this->table)
-                ->group_start()
-                ->like('firstname', $search)
-                ->or_like('lastname', $search)
-                ->or_like('email', $search)
-                ->or_like('address', $search)
-                ->or_like('contactno', $search)
-                ->group_end()
                 ->count_all_results();
         }
 
     private function apply_management_filters($search, $age_range)
     {
+        $search = trim((string) $search);
+
+        if ($search !== '')
+        {
+            $this->db->group_start()
+                ->like('firstname', $search)
+                ->or_like('lastname', $search)
+                ->or_like('email', $search)
+                ->or_like('address', $search)
+                ->or_like('contactno', $search)
+                ->group_end();
+        }
+
         $age_ranges = array(
             'under_18' => array(0, 17),
             '18_30' => array(18, 30),
