@@ -60,8 +60,8 @@ class Account extends MY_Controller
     public function change_password()
     {
         $this->require_post();
-        $this->form_validation->set_rules('current_password', 'Current password', 'required|max_length[50]');
-        $this->form_validation->set_rules('new_password', 'New password', 'required|min_length[12]|max_length[50]|callback_strong_password');
+        $this->form_validation->set_rules('current_password', 'Current password', 'required|max_length[72]');
+        $this->form_validation->set_rules('new_password', 'New password', 'required|min_length[12]|max_length[72]|callback_strong_password');
         $this->form_validation->set_rules('confirm_password', 'Confirm password', 'required|matches[new_password]');
 
         if ($this->form_validation->run() === FALSE)
@@ -126,11 +126,11 @@ class Account extends MY_Controller
 
         $this->load->library('upload', array(
             'upload_path' => $upload_path,
-            'allowed_types' => '*',
+            'allowed_types' => 'jpg|jpeg|png|webp',
             'max_size' => 2048,
             'max_width' => 2000,
             'max_height' => 2000,
-            'detect_mime' => FALSE,
+            'detect_mime' => TRUE,
             'encrypt_name' => TRUE,
             'remove_spaces' => TRUE
         ));
