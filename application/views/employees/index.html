@@ -20,7 +20,7 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
     <?php $this->load->view('components/layout.php'); ?>
 
     <main class="app-main container py-4 py-lg-5">
-        <div class="card border-0 bg-primary shadow-lg rounded-4 mb-4">
+        <div class="card border-0 bg-primary shadow-lg rounded-4 mb-4 page-hero">
             <div class="card-body p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
             <div>
                 <span class="badge rounded-pill text-light mb-2">Employee Management</span>
@@ -36,22 +36,73 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
             </div>
         </div>
 
-        <section class="card border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 p-4 border-bottom bg-white">
+        <section class="card border-0 shadow-lg rounded-4 directory-card">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 directory-card-header">
                 <div>
                     <h2 class="h5 mb-1">Employee Directory</h2>
                 </div>
                 <span class="badge rounded-pill text-bg-primary-subtle text-primary-emphasis px-3 py-2"><?= (int) $employee_total; ?> employees</span>
             </div>
 
-            <form method="get" action="<?= html_escape(site_url('employees')); ?>" class="p-3 border-bottom bg-body-tertiary">
-                <div class="row g-2 align-items-end">
-                    <div class="col-md-10"><label class="form-label small" for="employeeSearch">Search name, contact, or address</label><input class="form-control" id="employeeSearch" name="search" value="<?= html_escape($employee_search); ?>" placeholder="Name, contact number, or address"></div>
-                    <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Search</button></div>
-                    <div class="col-6 col-md-4"><label class="form-label small" for="employeeAgeRange">Age range</label><select class="form-select" id="employeeAgeRange" name="age_range"><option value="">All ages</option><option value="under_18" <?= $employee_age_range === 'under_18' ? 'selected' : ''; ?>>Under 18</option><option value="18_30" <?= $employee_age_range === '18_30' ? 'selected' : ''; ?>>18-30</option><option value="31_40" <?= $employee_age_range === '31_40' ? 'selected' : ''; ?>>31-40</option><option value="41_50" <?= $employee_age_range === '41_50' ? 'selected' : ''; ?>>41-50</option><option value="51_plus" <?= $employee_age_range === '51_plus' ? 'selected' : ''; ?>>51+</option></select></div>
-                    <div class="col-6 col-md-4"><label class="form-label small" for="employeeSort">Sort by name</label><select class="form-select" id="employeeSort" name="sort"><option value="lastname" <?= $employee_sort === 'lastname' ? 'selected' : ''; ?>>Last name</option><option value="firstname" <?= $employee_sort === 'firstname' ? 'selected' : ''; ?>>First name</option><option value="birthday" <?= $employee_sort === 'birthday' ? 'selected' : ''; ?>>Birthday</option></select></div>
-                    <div class="col-6 col-md-4"><label class="form-label small" for="employeeDirection">Order</label><select class="form-select" id="employeeDirection" name="direction"><option value="ASC" <?= $employee_direction === 'ASC' ? 'selected' : ''; ?>>Ascending</option><option value="DESC" <?= $employee_direction === 'DESC' ? 'selected' : ''; ?>>Descending</option></select></div>
-                    <input type="hidden" name="per_page" value="<?= (int) $employee_per_page; ?>">
+            <form method="get" action="<?= html_escape(site_url('employees')); ?>" class="table-toolbar">
+                <input type="hidden" name="per_page" value="<?= (int) $employee_per_page; ?>">
+                <div class="table-toolbar-main">
+                    <div class="table-search-wrap">
+                        <svg class="table-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                        <label class="visually-hidden" for="employeeSearch">Search employees</label>
+                        <input class="form-control table-search-input" id="employeeSearch" name="search" value="<?= html_escape($employee_search); ?>" placeholder="Search name, contact, or address">
+                        <button class="btn btn-primary table-search-submit" type="submit">Search</button>
+                    </div>
+                    <button
+                        class="btn btn-outline-secondary filter-toggle <?= ($employee_age_range !== '' || $employee_sort !== 'lastname' || $employee_direction === 'DESC') ? 'has-filters' : ''; ?>"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#employeeFilters"
+                        aria-expanded="<?= ($employee_age_range !== '' || $employee_sort !== 'lastname' || $employee_direction === 'DESC') ? 'true' : 'false'; ?>"
+                        aria-controls="employeeFilters"
+                        aria-label="Open employee filters"
+                        title="Filters"
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+                    </button>
+                </div>
+                <div class="collapse <?= ($employee_age_range !== '' || $employee_sort !== 'lastname' || $employee_direction === 'DESC') ? 'show' : ''; ?>" id="employeeFilters">
+                    <div class="table-filter-panel">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-sm-6 col-lg-3">
+                                <label class="form-label" for="employeeAgeRange">Age range</label>
+                                <select class="form-select" id="employeeAgeRange" name="age_range">
+                                    <option value="">All ages</option>
+                                    <option value="under_18" <?= $employee_age_range === 'under_18' ? 'selected' : ''; ?>>Under 18</option>
+                                    <option value="18_30" <?= $employee_age_range === '18_30' ? 'selected' : ''; ?>>18-30</option>
+                                    <option value="31_40" <?= $employee_age_range === '31_40' ? 'selected' : ''; ?>>31-40</option>
+                                    <option value="41_50" <?= $employee_age_range === '41_50' ? 'selected' : ''; ?>>41-50</option>
+                                    <option value="51_plus" <?= $employee_age_range === '51_plus' ? 'selected' : ''; ?>>51+</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <label class="form-label" for="employeeSort">Sort by</label>
+                                <select class="form-select" id="employeeSort" name="sort">
+                                    <option value="lastname" <?= $employee_sort === 'lastname' ? 'selected' : ''; ?>>Last name</option>
+                                    <option value="firstname" <?= $employee_sort === 'firstname' ? 'selected' : ''; ?>>First name</option>
+                                    <option value="birthday" <?= $employee_sort === 'birthday' ? 'selected' : ''; ?>>Birthday</option>
+                                    <option value="address" <?= $employee_sort === 'address' ? 'selected' : ''; ?>>Address</option>
+                                    <option value="contactno" <?= $employee_sort === 'contactno' ? 'selected' : ''; ?>>Contact number</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <label class="form-label" for="employeeDirection">Order</label>
+                                <select class="form-select" id="employeeDirection" name="direction">
+                                    <option value="ASC" <?= $employee_direction === 'ASC' ? 'selected' : ''; ?>>Ascending</option>
+                                    <option value="DESC" <?= $employee_direction === 'DESC' ? 'selected' : ''; ?>>Descending</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-lg-3 d-flex gap-2">
+                                <button class="btn btn-primary flex-fill" type="submit">Apply</button>
+                                <a class="btn btn-outline-secondary flex-fill" href="<?= html_escape(site_url('employees') . '?per_page=' . (int) $employee_per_page); ?>">Clear</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
 
@@ -65,7 +116,7 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
                 </div>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table class="table table-hover table-group-divider align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0 data-table">
                         <thead class="table-light text-uppercase small">
                             <tr>
                                
@@ -133,15 +184,51 @@ $reopen_modal = !empty($validation_errors) ? 'employeeModal' : '';
                         </tbody>
                     </table>
                 </div>
-                <?php $employee_start = $employee_total > 0 ? (($employee_page - 1) * $employee_per_page) + 1 : 0; $employee_end = min($employee_page * $employee_per_page, $employee_total); $employee_prev_page = max(1, $employee_page - 1); $employee_next_page = min($employee_total_pages, $employee_page + 1); ?>
-                <div class="p-3 border-top bg-white">
-                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
-                        <small class="text-secondary">Showing <?= $employee_start; ?>-<?= $employee_end; ?> of <?= (int) $employee_total; ?> employees</small>
+                <?php
+                $employee_start = $employee_total > 0 ? (($employee_page - 1) * $employee_per_page) + 1 : 0;
+                $employee_end = min($employee_page * $employee_per_page, $employee_total);
+                $employee_prev_page = max(1, $employee_page - 1);
+                $employee_next_page = min($employee_total_pages, $employee_page + 1);
+                $employee_query_base = array(
+                    'search' => $employee_search,
+                    'age_range' => $employee_age_range,
+                    'sort' => $employee_sort,
+                    'direction' => $employee_direction,
+                    'per_page' => $employee_per_page
+                );
+                $employee_window_start = max(1, min($employee_page - 2, max(1, $employee_total_pages - 4)));
+                $employee_window_end = min($employee_total_pages, $employee_window_start + 4);
+                ?>
+                <div class="table-pagination">
+                    <div class="table-pagination-meta">Showing <?= $employee_start; ?>-<?= $employee_end; ?> of <?= (int) $employee_total; ?> employees</div>
+                    <div class="table-pagination-controls">
+                        <form class="table-limit-form" method="get" action="<?= html_escape(site_url('employees')); ?>">
+                            <input type="hidden" name="search" value="<?= html_escape($employee_search); ?>">
+                            <input type="hidden" name="age_range" value="<?= html_escape($employee_age_range); ?>">
+                            <input type="hidden" name="sort" value="<?= html_escape($employee_sort); ?>">
+                            <input type="hidden" name="direction" value="<?= html_escape($employee_direction); ?>">
+                            <label for="employeePerPage">Rows</label>
+                            <select class="form-select form-select-sm" id="employeePerPage" name="per_page" onchange="this.form.submit()">
+                                <?php foreach (array(10, 25, 50) as $size): ?>
+                                    <option value="<?= $size; ?>" <?= (int) $employee_per_page === $size ? 'selected' : ''; ?>><?= $size; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </form>
                         <?php if ($employee_total_pages > 1): ?>
-                            <nav aria-label="Employee pages" class="d-flex align-items-center gap-2">
-                                <a class="btn btn-sm btn-outline-secondary rounded-circle <?= $employee_page <= 1 ? 'disabled' : ''; ?>" href="<?= $employee_page <= 1 ? '#' : html_escape(site_url('employees') . '?' . http_build_query(array('search' => $employee_search, 'age_range' => $employee_age_range, 'sort' => $employee_sort, 'direction' => $employee_direction, 'page' => $employee_prev_page, 'per_page' => $employee_per_page))); ?>" aria-label="Previous page" <?= $employee_page <= 1 ? 'tabindex="-1" aria-disabled="true"' : ''; ?>>←</a>
-                                <span class="small fw-semibold text-secondary">Page <?= (int) $employee_page; ?> of <?= (int) $employee_total_pages; ?></span>
-                                <a class="btn btn-sm btn-outline-secondary rounded-circle <?= $employee_page >= $employee_total_pages ? 'disabled' : ''; ?>" href="<?= $employee_page >= $employee_total_pages ? '#' : html_escape(site_url('employees') . '?' . http_build_query(array('search' => $employee_search, 'age_range' => $employee_age_range, 'sort' => $employee_sort, 'direction' => $employee_direction, 'page' => $employee_next_page, 'per_page' => $employee_per_page))); ?>" aria-label="Next page" <?= $employee_page >= $employee_total_pages ? 'tabindex="-1" aria-disabled="true"' : ''; ?>>→</a>
+                            <nav aria-label="Employee pages">
+                                <ul class="pagination pagination-sm app-pagination">
+                                    <li class="page-item <?= $employee_page <= 1 ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="<?= $employee_page <= 1 ? '#' : html_escape(site_url('employees') . '?' . http_build_query(array_merge($employee_query_base, array('page' => $employee_prev_page)))); ?>" aria-label="Previous page">‹</a>
+                                    </li>
+                                    <?php for ($page_number = $employee_window_start; $page_number <= $employee_window_end; $page_number++): ?>
+                                        <li class="page-item <?= $page_number === $employee_page ? 'active' : ''; ?>">
+                                            <a class="page-link" href="<?= html_escape(site_url('employees') . '?' . http_build_query(array_merge($employee_query_base, array('page' => $page_number)))); ?>"><?= $page_number; ?></a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <li class="page-item <?= $employee_page >= $employee_total_pages ? 'disabled' : ''; ?>">
+                                        <a class="page-link" href="<?= $employee_page >= $employee_total_pages ? '#' : html_escape(site_url('employees') . '?' . http_build_query(array_merge($employee_query_base, array('page' => $employee_next_page)))); ?>" aria-label="Next page">›</a>
+                                    </li>
+                                </ul>
                             </nav>
                         <?php endif; ?>
                     </div>
